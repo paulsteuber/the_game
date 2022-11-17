@@ -23,4 +23,10 @@ export default class CardHelper {
         return 6
     } 
   }
+  static sortCards(numbers: number[]): number[]{
+    numbers.sort(function(a, b) {
+      return a - b;
+    });
+    return numbers;
+  }
 }

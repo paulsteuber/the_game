@@ -1,21 +1,23 @@
 import { useContext } from "react";
-import { getEmptyGame, startGame } from "../Game";
+import {Game, Player} from "../types";
 import { GameContext } from "../GameContext";
-import { Game } from "./../types";
+import TheGame from "../TheGame";
 
 export function Header(){
   const { gameStore, setGameStore  } = useContext<any>(GameContext);
   const disablePlayerButtons: string = gameStore.players.length ? "disabled" : "";
 
   const setPlayerCount = (count: number):void => {
-    if(gameStore.started) return;
-    let game = startGame(count);
-
+    if(gameStore.initialized) return;
+    let game = {...gameStore};
+    //init players
+    game.players = TheGame.initPlayers(count);
+    game = TheGame.givePlayersCards(game);
+    game.initialized = true;
     setGameStore(game);
-
   }
   const startNewGame = () => {
-    let game = getEmptyGame();
+    let game = TheGame.getNewGame();
     setGameStore(game);
 
   }
