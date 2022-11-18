@@ -1,11 +1,15 @@
 import { Game, Player, Stack } from "./types";
 import CardHelper from "./utilities/CardHelper"
+import PlayHelper from "./utilities/PlayHelper"
 
 export default class TheGame{
   constructor(){}
 
   static getNewGame(): Game{
     return {
+      status: {
+        allowUserToPlay: true,
+      },
       initialized: false,
       players: [],
       stacks: [
@@ -48,11 +52,19 @@ export default class TheGame{
   static isCardAllowed(cardValue: number, stack: Stack):boolean{
     if(!stack.cards.length) return true;
     const lastStackNumber:number = stack.cards[stack.cards.length -1];
-    console.log(lastStackNumber);
     if(stack.up){
       return lastStackNumber < cardValue  || lastStackNumber -10 === cardValue
     }
     return lastStackNumber > cardValue || lastStackNumber +10 === cardValue
+  }
+  static isCardTenBagger(cardValue: number, stack: Stack):boolean{
+    const lastStackNumber:number = stack.cards[stack.cards.length -1];
+    if(!stack.cards.length) return false;
+    if(stack.up){
+      return lastStackNumber -10 === cardValue
+    } else {
+      return lastStackNumber +10 === cardValue
+    }
   }
 
   static isAllowedFinishMove(game: Game): boolean {
@@ -67,6 +79,11 @@ export default class TheGame{
   }
 
   static otherPlayerPlay(game: Game):Game{
+    let otherPlayers = game.players.filter((player, index ) => index != 0);
+    
+    otherPlayers.forEach((player, index) => {
+      const playHelper = new PlayHelper(player.cards, game.stacks);
+    });
     return game;
   }
 }

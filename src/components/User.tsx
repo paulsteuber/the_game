@@ -9,11 +9,13 @@ export function User(){
     const number = {
       value: card
     }
-    return (<UserCard key={number.value} {...number}/>)})
+    return (<UserCard key={number.value} {...number}/>)}
+  );
+  const allowUserToPlayClass = gameStore.status.allowUserToPlay ? "":"play-forbidden";
   return (
     <div className="d-flex justify-content-center align-items-center flex-column user">
       User Cards
-      <div className="d-flex justify-content-center">
+      <div className={allowUserToPlayClass+" d-flex justify-content-center"}>
         {userCardsComponents}
       </div>
       

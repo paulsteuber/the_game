@@ -11,6 +11,7 @@ export function RefillStack(){
     const isAllowed = TheGame.isAllowedFinishMove(game);
     const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
     if(isAllowed){
+      game.status.allowUserToPlay = false;
       //Draw new cards
       const usersCardsCount = game.players[0].cards.length;
       for (let i = 0; i < cardsPerPlayer-usersCardsCount; i++){
@@ -22,6 +23,7 @@ export function RefillStack(){
       game.players[0].cards = CardHelper.sortCards(game.players[0].cards);
       //let the other player play!
       TheGame.otherPlayerPlay(game);
+      game.status.allowUserToPlay = true;
       setGameStore(game);
       return;
     }
