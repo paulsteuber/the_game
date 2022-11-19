@@ -78,11 +78,31 @@ export default class TheGame{
     
   }
 
-  static otherPlayerPlay(game: Game):Game{
+  static otherPlayersPlay(game: Game):Game{
     let otherPlayers = game.players.filter((player, index ) => index != 0);
     
     otherPlayers.forEach((player, index) => {
+      let wannaPlay: [{card: number, toStackId: number}] | [];
       const playHelper = new PlayHelper(player.cards, game.stacks);
+
+      wannaPlay = playHelper.getCardsToPlay();
+      if(wannaPlay.length){
+        wannaPlay.forEach((wp) =>{
+          console.log("WP",wp)
+          setTimeout(()=>{
+            //remove card from player cards array
+            game.players[index+1].cards = player.cards.filter((card) => card !== wp.card);
+            //add card to stack
+            console.log("XXX",game.stacks)
+            game.stacks[wp.toStackId].cards.push(wp.card);
+            console.log(`Player ${index+1} played Card ${wp.card} to Stack ${wp.toStackId}`)
+          },1000)
+        });
+      }
+      
+      
+
+
     });
     return game;
   }

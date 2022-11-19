@@ -3,25 +3,34 @@ import { Stack } from "../types";
 export default class PlayHelper{
   playerCards: number[];
   stacks: Stack[];
+  cardsToPlay: [{card: number, toStackId: number}] | [];
   
 
   constructor(playerCards: number[], stacks: Stack[]){
     this.playerCards = playerCards;
     this.stacks = stacks;
+    this.cardsToPlay = [];
     this.findTenBagger();
+  }
+  public getCardsToPlay(): [{card: number, toStackId: number}] | []{
+    return this.cardsToPlay;
   }
 
   private findTenBagger(){
     // h2h - Hand to Hand Tenbagger
-    const tenBagger:{h2h: [{start: number, end: number}], stack: {hand: number, stacknumber: number, stackindex: number}} = {
+    const tenBagger:{h2h: [{start: number, end: number}], stack: [{hand: number, stacknumber: number, stackindex: number}]} = {
       h2h: this.findHandToHandTenBagger(),
       stack: this.findStackTenBagger()
     }
-    console.log(tenBagger);
+    console.log("tenBagger", tenBagger);
+    if(tenBagger.stack[0]){
+      const cardsToPlay: [{card: number, toStackId: number}] | [] =[{card: tenBagger.stack[0].hand, toStackId: tenBagger.stack[0].stackindex}]
+      this.cardsToPlay = cardsToPlay;
+    }
 
 
   }
-  private findStackTenBagger():{hand: number, stacknumber: number, stackindex: number}{
+  private findStackTenBagger():[{hand: number, stacknumber: number, stackindex: number}]{
     const numbers = this.playerCards;
     const resultArr: any = [];
     this.stacks.forEach((stack, stackIndex) => {

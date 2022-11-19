@@ -22,7 +22,7 @@ export function RefillStack(){
       }
       game.players[0].cards = CardHelper.sortCards(game.players[0].cards);
       //let the other player play!
-      TheGame.otherPlayerPlay(game);
+      TheGame.otherPlayersPlay(game);
       game.status.allowUserToPlay = true;
       setGameStore(game);
       return;
