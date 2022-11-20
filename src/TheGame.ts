@@ -77,9 +77,14 @@ export default class TheGame {
     }
     return false;
   }
+  static cardsPlayerWannaPlay(player: Player, game: Game):[{card: number, stackID: number}]{
+    const minimumCardsToPlay = game.refillStack.length > 0 ? 2 : 1;
 
-  static otherPlayersPlay(game: Game): Game {
-    let otherPlayers = game.players.filter((player, index) => index != 0);
+
+    return [{card: 1, stackID: 2}];
+  }
+  static otherPlayersPlay(game: Game):Game{
+    let otherPlayers = game.players.filter((player, index ) => index != 0);
 
     otherPlayers.forEach((player, index) => {
       let wannaPlay: [{ card: number; toStackId: number }] | [];

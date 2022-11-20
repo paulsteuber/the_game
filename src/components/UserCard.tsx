@@ -22,11 +22,8 @@ export function UserCard(cardNumber: { value: number }) {
     if (isAllowed) {
       selectedStack.cards.push(cardNumber.value);
       //remove card from players hand
-      console.log("Player Cards", game.players[0].cards, cardNumber.value);
-      const newUserCards = game.players[0].cards.filter(
-        (num: number) => num !== cardNumber.value
-      );
-      console.log(newUserCards);
+      console.log("Player Cards", game.players[0].cards, cardNumber.value)
+      const newUserCards = game.players[0].cards.filter((num: number) => num !== cardNumber.value);
       game.players[0].cards = newUserCards;
       console.log(game.players[0].cards);
       /** SET NEW GAME STORE */
