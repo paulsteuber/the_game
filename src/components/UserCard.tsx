@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 
@@ -6,18 +6,19 @@ export function UserCard(cardNumber:{value:number}){
   const { gameStore, setGameStore  } = useContext<any>(GameContext);
   const [buttonStatus, setButtonStatus] = useState([{className: "btn-light"},{className: "btn-light"},{className: "btn-light"},{className: "btn-light"}]);
 
+  useEffect(() => {
+
+  })
   const addCardToStack = (stackId: number) => {
     const game = {...gameStore};
     const selectedStack = game.stacks[stackId];
     /** check if user is allowed to add this number */
-    console.log("VAL",cardNumber.value, "SELECTED", selectedStack)
     const isAllowed = TheGame.isCardAllowed(cardNumber.value, selectedStack);
     if(isAllowed){
       selectedStack.cards.push(cardNumber.value)
       //remove card from players hand
       console.log("Player Cards", game.players[0].cards, cardNumber.value)
       const newUserCards = game.players[0].cards.filter((num: number) => num !== cardNumber.value);
-      console.log(newUserCards);
       game.players[0].cards = newUserCards;
       console.log(game.players[0].cards)
       /** SET NEW GAME STORE */
