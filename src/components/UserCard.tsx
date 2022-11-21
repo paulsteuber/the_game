@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
+import { Stack } from "../types";
 
 export function UserCard(cardNumber: { value: number }) {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
@@ -12,8 +13,13 @@ export function UserCard(cardNumber: { value: number }) {
   ]);
 
   useEffect(() => {
-    console.log("huhu");
-  });
+    const newButtonStatus = { ...buttonStatus };
+    gameStore.stacks.forEach((stack: Stack, index: number) => {
+      const isAllowed = TheGame.isCardAllowed(cardNumber.value, stack);
+      newButtonStatus[index].className = isAllowed ? "btn-light" : "btn-danger";
+    });
+    setButtonStatus(newButtonStatus);
+  }, []);
   const addCardToStack = (stackId: number) => {
     const game = { ...gameStore };
     const selectedStack = game.stacks[stackId];
@@ -22,8 +28,10 @@ export function UserCard(cardNumber: { value: number }) {
     if (isAllowed) {
       selectedStack.cards.push(cardNumber.value);
       //remove card from players hand
-      console.log("Player Cards", game.players[0].cards, cardNumber.value)
-      const newUserCards = game.players[0].cards.filter((num: number) => num !== cardNumber.value);
+      console.log("Player Cards", game.players[0].cards, cardNumber.value);
+      const newUserCards = game.players[0].cards.filter(
+        (num: number) => num !== cardNumber.value
+      );
       game.players[0].cards = newUserCards;
       console.log(game.players[0].cards);
       /** SET NEW GAME STORE */
