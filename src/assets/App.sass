@@ -20,6 +20,24 @@ html, body
   background: $dark
   color: $bright
 #app
+  .stack
+    .top-card
+      width: 100%
+      position: relative
+      .h3
+        z-index: 10
+        position: relative
+      &::after
+        content:""
+        width: calc(100% - 12px)
+        height: calc(100% - 12px)
+        border-radius: 16px
+        display: block
+        position: absolute
+        top: 6px
+        left:6px
+        background: rgb(251,74,151)
+        background: radial-gradient(circle, rgba(251,74,151,1) 0%, rgba(148,187,233,1) 100%)
   .state
     position: fixed
     z-index: 10

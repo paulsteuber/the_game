@@ -1,4 +1,4 @@
-import { Game, Player, Stack } from "./types";
+import { Game, Player, PlayerCard, Stack } from "./types";
 import CardHelper from "./utilities/CardHelper";
 import PlayHelper from "./utilities/PlayHelper";
 
@@ -33,15 +33,15 @@ export default class TheGame {
   }
   static givePlayersCards(game: Game): Game {
     const countCards: number = CardHelper.cardsPerPlayer(game.players.length);
-    console.log("Playyyyyaas", game.players);
     //give all players their first cards
     for (let p = 0; p < game.players.length; p++) {
-      console.log("Player ", p);
-      let cards: number[] = [];
       for (let c = 0; c < countCards; c++) {
         const shiftedNum: number | undefined = game.refillStack.shift();
         if (!shiftedNum) break;
-        game.players[p].cards.push(shiftedNum);
+        game.players[p].cards.push({
+          value: shiftedNum,
+          stackStatus: { a: true, b: true, c: true, d: true },
+        });
       }
       game.players[p].cards = CardHelper.sortCards(game.players[p].cards);
     }
@@ -65,6 +65,26 @@ export default class TheGame {
       return lastStackNumber + 10 === cardValue;
     }
   }
+  static refreshPlayerCardsStatus(
+    players: Player[],
+    stacks: Stack[]
+  ): Player[] {
+    const refreshedPlayerCards = players.map((player) => {
+      const refreshedCards = player.cards.map((card) => {
+        card.stackStatus = {
+          a: this.isCardAllowed(card.value, stacks[0]),
+          b: this.isCardAllowed(card.value, stacks[1]),
+          c: this.isCardAllowed(card.value, stacks[2]),
+          d: this.isCardAllowed(card.value, stacks[3]),
+        };
+        return card;
+      });
+      player.cards = refreshedCards;
+      return player;
+    });
+    players = refreshedPlayerCards;
+    return players;
+  }
 
   static isAllowedFinishMove(game: Game): boolean {
     //if refillstack is not empty player must play minimum 2 cards
@@ -77,14 +97,16 @@ export default class TheGame {
     }
     return false;
   }
-  static cardsPlayerWannaPlay(player: Player, game: Game):[{card: number, stackID: number}]{
+  static cardsPlayerWannaPlay(
+    player: Player,
+    game: Game
+  ): [{ card: number; stackID: number }] {
     const minimumCardsToPlay = game.refillStack.length > 0 ? 2 : 1;
 
-
-    return [{card: 1, stackID: 2}];
+    return [{ card: 1, stackID: 2 }];
   }
-  static otherPlayersPlay(game: Game):Game{
-    let otherPlayers = game.players.filter((player, index ) => index != 0);
+  static otherPlayersPlay(game: Game): Game {
+    let otherPlayers = game.players.filter((player, index) => index != 0);
 
     otherPlayers.forEach((player, index) => {
       let wannaPlay: [{ card: number; toStackId: number }] | [];

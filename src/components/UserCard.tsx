@@ -1,50 +1,32 @@
 import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
-import { Stack } from "../types";
+import { PlayerCard, Stack } from "../types";
 
-export function UserCard(cardNumber: { value: number }) {
+export function UserCard(card: PlayerCard) {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
-  const [buttonStatus, setButtonStatus] = useState([
-    { className: "btn-light" },
-    { className: "btn-light" },
-    { className: "btn-light" },
-    { className: "btn-light" },
-  ]);
+  const btnStatus = ["btn-light", "btn-danger"];
 
-  useEffect(() => {
-    const newButtonStatus = { ...buttonStatus };
-    gameStore.stacks.forEach((stack: Stack, index: number) => {
-      const isAllowed = TheGame.isCardAllowed(cardNumber.value, stack);
-      newButtonStatus[index].className = isAllowed ? "btn-light" : "btn-danger";
-    });
-    setButtonStatus(newButtonStatus);
-  }, []);
+  useEffect(() => {}, []);
   const addCardToStack = (stackId: number) => {
     const game = { ...gameStore };
     const selectedStack = game.stacks[stackId];
     /** check if user is allowed to add this number */
-    const isAllowed = TheGame.isCardAllowed(cardNumber.value, selectedStack);
+    const isAllowed = TheGame.isCardAllowed(card.value, selectedStack);
     if (isAllowed) {
-      selectedStack.cards.push(cardNumber.value);
+      selectedStack.cards.push(card.value);
       //remove card from players hand
-      console.log("Player Cards", game.players[0].cards, cardNumber.value);
       const newUserCards = game.players[0].cards.filter(
-        (num: number) => num !== cardNumber.value
+        (c: PlayerCard) => c.value !== card.value
       );
       game.players[0].cards = newUserCards;
-      console.log(game.players[0].cards);
+      /** REFRESH ALL PLAYERCARD STATUS */
+      game.players = TheGame.refreshPlayerCardsStatus(
+        game.players,
+        game.stacks
+      );
       /** SET NEW GAME STORE */
       setGameStore(game);
-    } else {
-      let newBtnStatus = { ...buttonStatus };
-      newBtnStatus[stackId].className = "btn-danger";
-      setButtonStatus(newBtnStatus);
-      setTimeout(() => {
-        newBtnStatus = { ...buttonStatus };
-        newBtnStatus[stackId].className = "btn-light";
-        setButtonStatus(newBtnStatus);
-      }, 1500);
     }
   };
   return (
@@ -53,7 +35,9 @@ export function UserCard(cardNumber: { value: number }) {
         <div className="btn-group" role="group" aria-label="Basic example">
           <button
             type="button"
-            className={buttonStatus[0].className + " btn btn-sm"}
+            className={
+              (card.stackStatus.a ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            }
             onClick={() => {
               addCardToStack(0);
             }}
@@ -62,7 +46,9 @@ export function UserCard(cardNumber: { value: number }) {
           </button>
           <button
             type="button"
-            className={buttonStatus[1].className + " btn btn-sm"}
+            className={
+              (card.stackStatus.b ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            }
             onClick={() => {
               addCardToStack(1);
             }}
@@ -71,7 +57,9 @@ export function UserCard(cardNumber: { value: number }) {
           </button>
           <button
             type="button"
-            className={buttonStatus[2].className + " btn btn-sm"}
+            className={
+              (card.stackStatus.c ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            }
             onClick={() => {
               addCardToStack(2);
             }}
@@ -80,7 +68,9 @@ export function UserCard(cardNumber: { value: number }) {
           </button>
           <button
             type="button"
-            className={buttonStatus[3].className + " btn btn-sm"}
+            className={
+              (card.stackStatus.d ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            }
             onClick={() => {
               addCardToStack(3);
             }}
@@ -90,7 +80,7 @@ export function UserCard(cardNumber: { value: number }) {
         </div>
       </div>
       <div className="user-card rounded-2 shadow py-4 m-2 d-flex justify-content-center align-items-center">
-        <span className="h1 fw-bolder m-0 p-4">{cardNumber.value}</span>
+        <span className="h1 fw-bolder m-0 p-4">{card.value}</span>
       </div>
     </div>
   );
