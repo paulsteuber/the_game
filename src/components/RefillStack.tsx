@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
-import { PlayerCard } from "../types";
+import { Player, PlayerCard } from "../types";
 import CardHelper from "../utilities/CardHelper";
 
 export function RefillStack() {
@@ -32,7 +32,17 @@ export function RefillStack() {
         game.stacks
       );
       //let the other player play!
-      TheGame.otherPlayersPlay(game);
+      const otherPlayers = game.players.filter(
+        (p: Player, playerID: number) => playerID !== 0
+      );
+      otherPlayers.forEach((player: Player) => {
+        const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
+        const cardsPlayerWannaPlay = TheGame.cardsPlayerWannaPlay(
+          player,
+          game.stacks,
+          minimumCardsToPlay
+        );
+      });
       game.status.allowUserToPlay = true;
       setGameStore(game);
       return;

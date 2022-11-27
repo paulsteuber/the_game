@@ -3,7 +3,14 @@ export type PlayerCard = {
   value: number;
   stackStatus: { a: boolean; b: boolean; c: boolean; d: boolean };
 };
-
+export type WannaPlay = {
+  card: number;
+  targetStackId: number;
+};
+export type TenBagger = {
+  hand: [{ cards: number[] }];
+  stack: [{ stackCard: number; handCard: number; stackId: number }];
+};
 export type Player = {
   cards: PlayerCard[];
 };

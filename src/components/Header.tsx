@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Game, Player } from "../types";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
+import { PlayerDecision } from "../utilities/PlayerDecision";
 
 export function Header() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
@@ -16,6 +17,7 @@ export function Header() {
     game.players = TheGame.initPlayers(count);
     game = TheGame.givePlayersCards(game);
     game.initialized = true;
+    const test = new PlayerDecision(game.players[0], game);
     setGameStore(game);
   };
   const startNewGame = () => {
