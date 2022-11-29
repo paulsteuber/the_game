@@ -42,7 +42,7 @@ export function RefillStack() {
         const plDecision = new PlayerDecision(player, game);
         const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
         console.log("PLAYER ", playerIndex, " --- ", bestPos);
-        bestPos.way.forEach((way) => {
+        bestPos.way.reverse().forEach((way) => {
           if (
             TheGame.isCardAllowed(way.hand.value, game.stacks[way.stack_id])
           ) {
