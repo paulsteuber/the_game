@@ -3,6 +3,7 @@ import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import { Player, PlayerCard } from "../types";
 import CardHelper from "../utilities/CardHelper";
+import { PlayerDecision } from "../utilities/PlayerDecision";
 
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
@@ -37,11 +38,8 @@ export function RefillStack() {
       );
       otherPlayers.forEach((player: Player) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
-        const cardsPlayerWannaPlay = TheGame.cardsPlayerWannaPlay(
-          player,
-          game.stacks,
-          minimumCardsToPlay
-        );
+
+        const test = new PlayerDecision(player, game);
       });
       game.status.allowUserToPlay = true;
       setGameStore(game);
