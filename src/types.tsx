@@ -29,3 +29,7 @@ export type Game = {
   stacks: [Stack, Stack, Stack, Stack];
   refillStack: number[];
 };
+export type Possibility = {
+  weight: number;
+  way: [{ hand: PlayerCard; dist: number; stack_id: number }];
+};

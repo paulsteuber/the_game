@@ -13,10 +13,10 @@ export default class TheGame {
       initialized: false,
       players: [],
       stacks: [
-        { id: 0, up: true, cards: [] },
-        { id: 1, up: true, cards: [] },
-        { id: 2, up: false, cards: [] },
-        { id: 3, up: false, cards: [] },
+        { id: 0, up: true, cards: [1] },
+        { id: 1, up: true, cards: [1] },
+        { id: 2, up: false, cards: [100] },
+        { id: 3, up: false, cards: [100] },
       ],
       refillStack: CardHelper.mix([...Array(98).keys()].map((i) => i + 2)),
     };

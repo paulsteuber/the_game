@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
-import { Player, PlayerCard } from "../types";
+import { Game, Player, PlayerCard } from "../types";
 import CardHelper from "../utilities/CardHelper";
 import { PlayerDecision } from "../utilities/PlayerDecision";
 
@@ -9,7 +9,7 @@ export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
 
   const finishMove = () => {
-    let game = { ...gameStore };
+    let game: Game = { ...gameStore };
     const isAllowed = TheGame.isAllowedFinishMove(game);
     const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
     if (isAllowed) {
@@ -36,13 +36,33 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-      otherPlayers.forEach((player: Player) => {
-        const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
 
-        const test = new PlayerDecision(player, game);
+      otherPlayers.forEach((player: Player, playerIndex: number) => {
+        const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
+        const plDecision = new PlayerDecision(player, game);
+        const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
+        console.log("PLAYER ", playerIndex, " --- ", bestPos);
+        bestPos.way.forEach((way) => {
+          if (
+            TheGame.isCardAllowed(way.hand.value, game.stacks[way.stack_id])
+          ) {
+            game.players[playerIndex + 1].cards = player.cards.filter(
+              (card) => card !== way.hand
+            );
+            game.stacks[way.stack_id].cards.push(way.hand.value);
+
+            //setGameStore(game);
+            console.log(
+              `Player ${playerIndex + 1} wanna play Card ${
+                way.hand.value
+              } to Stack ${way.stack_id}`
+            );
+          }
+        });
+        console.log(`Player ${playerIndex + 1} has played`);
       });
       game.status.allowUserToPlay = true;
-      setGameStore(game);
+      //setGameStore(game);
       return;
     }
 

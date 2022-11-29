@@ -1,14 +1,26 @@
-import { Game, Player, PlayerCard, Stack, TenBagger } from "../types";
+import { Game, Player, PlayerCard, Possibility, Stack } from "../types";
 
 export class PlayerDecision {
   player: Player;
   game: Game;
+  bestPossibilities: Possibility[];
   constructor(player: Player, game: Game) {
-    this.player = player;
-    this.game = game;
-    this.decisionMaker();
+    this.player = JSON.parse(JSON.stringify(player));
+    this.game = JSON.parse(JSON.stringify(game));
+    this.bestPossibilities = this.decisionMaker();
   }
-  private decisionMaker() {
+  public getBestPossibility(minimumCardsToPlay: number): Possibility {
+    //filter all poss with less than minimum cards length
+    const possMinimum = this.bestPossibilities.filter(
+      (pos: Possibility) => pos.way.length >= minimumCardsToPlay
+    );
+    const bestPossibility = possMinimum.reduce(function (prev, curr) {
+      return prev.weight < curr.weight ? prev : curr;
+    });
+    console.log("POSS MIN", possMinimum);
+    return bestPossibility;
+  }
+  private decisionMaker(): Possibility[] {
     function findWays(newhand: PlayerCard[], nstack: Stack[]) {
       const results: any = [];
       newhand.forEach((handNr) => {
@@ -18,10 +30,8 @@ export class PlayerDecision {
           const dist = stack.up
             ? handNr.value - lastStackNum
             : lastStackNum - handNr.value;
-          console.log("DIST", lastStackNum, handNr.value);
           if (dist > 0 || dist === -10) {
             const nextHand = newhand.filter((h) => h !== handNr);
-            console.log("Next Hand", nextHand);
             // play the card and refresh the value of the stack
             const nextStacks: Stack[] = [...nstack];
             nextStacks[stackId].cards.push(handNr.value);
@@ -37,27 +47,25 @@ export class PlayerDecision {
           results.push(lvl);
         }
       });
-      console.log("RES", results);
       return results;
     }
-
-    function findTheBestWay(waysArray: any, minimumCards: any) {
-      const allWays: any = [];
+    function findTheBestWay(waysArray: any) {
+      const allPossibilites: any = [];
 
       function rec(wayArray: any, possBefore: any) {
         wayArray.forEach((way: any) => {
           //first push possibility without next
           const newPoss = {
             weight: way.distance,
-            cards: [
+            way: [
               { hand: way.hand, dist: way.distance, stack_id: way.stack_id },
             ],
           };
           if (possBefore) {
             newPoss.weight = newPoss.weight + possBefore.weight;
-            newPoss.cards = [...newPoss.cards, ...possBefore.cards];
+            newPoss.way = [...newPoss.way, ...possBefore.way];
           }
-          allWays.push(newPoss);
+          allPossibilites.push(newPoss);
           if (way.next) {
             rec(way.next.flat(), newPoss);
           }
@@ -66,8 +74,8 @@ export class PlayerDecision {
       waysArray.forEach((wayArr: any) => {
         rec(wayArr, null);
       });
-      console.log(allWays);
+      return allPossibilites;
     }
-    findTheBestWay(findWays(this.player.cards, this.game.stacks), 2);
+    return findTheBestWay(findWays(this.player.cards, this.game.stacks));
   }
 }
