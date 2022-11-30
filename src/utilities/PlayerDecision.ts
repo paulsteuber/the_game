@@ -30,6 +30,11 @@ export class PlayerDecision {
           const dist = stack.up
             ? handNr.value - lastStackNum
             : lastStackNum - handNr.value;
+          console.log(
+            `Stack ${stack.up ? "up" : "down"} | Hand ${
+              handNr.value
+            } - Stack Last ${lastStackNum} | DIST ${dist}`
+          );
           if (dist > 0 || dist === -10) {
             const nextHand = newhand.filter((h) => h !== handNr);
             // play the card and refresh the value of the stack
