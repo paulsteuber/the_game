@@ -30,15 +30,24 @@ export class PlayerDecision {
           const dist = stack.up
             ? handNr.value - lastStackNum
             : lastStackNum - handNr.value;
-          console.log(
+          /**console.log(
             `Stack ${stack.up ? "up" : "down"} | Hand ${
               handNr.value
             } - Stack Last ${lastStackNum} | DIST ${dist}`
-          );
+          ); **/
           if (dist > 0 || dist === -10) {
-            const nextHand = newhand.filter((h) => h !== handNr);
             // play the card and refresh the value of the stack
-            const nextStacks: Stack[] = [...nstack];
+            const nextHand = newhand.filter((h) => h !== handNr);
+            const nextStacks: Stack[] = nstack.map((s, sid) => {
+              if (sid === stackId) {
+                console.log(stackId, " CARD BF ", s.cards[s.cards.length - 1]);
+                s.cards.push(handNr.value);
+                console.log(stackId, "CARD ", s.cards[s.cards.length - 1]);
+              }
+
+              return s;
+            });
+            // const nextStacks: Stack[] = JSON.parse(JSON.stringify(nstack));
             nextStacks[stackId].cards.push(handNr.value);
             lvl.push({
               hand: handNr,
