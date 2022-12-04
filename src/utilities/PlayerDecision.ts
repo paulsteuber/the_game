@@ -3,93 +3,143 @@ import { Game, Player, PlayerCard, Possibility, Stack } from "../types";
 export class PlayerDecision {
   player: Player;
   game: Game;
-  bestPossibilities: Possibility[];
+  allPossibilities: Possibility[];
   constructor(player: Player, game: Game) {
     this.player = JSON.parse(JSON.stringify(player));
-    this.game = JSON.parse(JSON.stringify(game));
-    this.bestPossibilities = this.decisionMaker();
+    this.game = JSON.parse(JSON.stringify(game)); 
+    this.allPossibilities = this.decisionMaker();
   }
+  private decisionMaker(): Possibility[] {
+
+    const allWays = this.findAllWays();
+    const flattenAllWays = this.flattenAllWays(allWays);
+    return flattenAllWays;
+  }
+
   public getBestPossibility(minimumCardsToPlay: number): Possibility {
     //filter all poss with less than minimum cards length
-    const possMinimum = this.bestPossibilities.filter(
+    const possMinimum = this.allPossibilities.filter(
       (pos: Possibility) => pos.way.length >= minimumCardsToPlay
     );
+    console.log("POSS MINIMUM",possMinimum)
     const bestPossibility = possMinimum.reduce(function (prev, curr) {
       return prev.weight < curr.weight ? prev : curr;
     });
-    console.log("POSS MIN", possMinimum);
     return bestPossibility;
   }
-  private decisionMaker(): Possibility[] {
-    function findWays(newhand: PlayerCard[], nstack: Stack[]) {
-      const results: any = [];
-      newhand.forEach((handNr) => {
-        const lvl: any = [];
-        nstack.forEach((stack, stackId) => {
-          const lastStackNum = stack.cards[stack.cards.length - 1];
-          const dist = stack.up
-            ? handNr.value - lastStackNum
-            : lastStackNum - handNr.value;
-          /**console.log(
-            `Stack ${stack.up ? "up" : "down"} | Hand ${
-              handNr.value
-            } - Stack Last ${lastStackNum} | DIST ${dist}`
-          ); **/
-          if (dist > 0 || dist === -10) {
-            // play the card and refresh the value of the stack
-            const nextHand = newhand.filter((h) => h !== handNr);
-            const nextStacks: Stack[] = nstack.map((s, sid) => {
-              if (sid === stackId) {
-                console.log(stackId, " CARD BF ", s.cards[s.cards.length - 1]);
-                s.cards.push(handNr.value);
-                console.log(stackId, "CARD ", s.cards[s.cards.length - 1]);
-              }
 
-              return s;
-            });
-            // const nextStacks: Stack[] = JSON.parse(JSON.stringify(nstack));
-            nextStacks[stackId].cards.push(handNr.value);
-            lvl.push({
-              hand: handNr,
-              stack_id: stackId,
-              distance: dist,
-              next: findWays(nextHand, nextStacks),
-            });
-          }
-        });
-        if (lvl.length) {
-          results.push(lvl);
+
+  private flattenAllWays(waysArray: any) {
+    const allPossibilites: any = [];
+
+    function flattenWay(wayArray: any, possBefore: any) {
+      wayArray.forEach((way: any) => {
+        //first push possibility without next
+        const newPoss = {
+          weight: way.dist,
+          way: [
+            { hand: way.hand, dist: way.dist, stack_id: way.stack},
+          ],
+        };
+        if (possBefore) {
+          newPoss.weight = newPoss.weight + possBefore.weight;
+          newPoss.way = [...possBefore.way, ...newPoss.way];
+        }
+        allPossibilites.push(newPoss);
+        if (way.next) {
+          flattenWay(way.next.flat(), newPoss);
         }
       });
-      return results;
     }
-    function findTheBestWay(waysArray: any) {
-      const allPossibilites: any = [];
-
-      function rec(wayArray: any, possBefore: any) {
-        wayArray.forEach((way: any) => {
-          //first push possibility without next
-          const newPoss = {
-            weight: way.distance,
-            way: [
-              { hand: way.hand, dist: way.distance, stack_id: way.stack_id },
-            ],
-          };
-          if (possBefore) {
-            newPoss.weight = newPoss.weight + possBefore.weight;
-            newPoss.way = [...newPoss.way, ...possBefore.way];
-          }
-          allPossibilites.push(newPoss);
-          if (way.next) {
-            rec(way.next.flat(), newPoss);
-          }
-        });
-      }
-      waysArray.forEach((wayArr: any) => {
-        rec(wayArr, null);
-      });
-      return allPossibilites;
-    }
-    return findTheBestWay(findWays(this.player.cards, this.game.stacks));
+    waysArray.forEach((wayArr: any) => {
+      flattenWay(wayArr, null);
+    });
+    console.log(allPossibilites);
+    return allPossibilites;
   }
+
+
+  private getDistance(handCard: number, stack: Stack){
+    const lastStackNumber = stack.cards[stack.cards.length - 1 ];
+    return stack.up ? handCard - lastStackNumber : lastStackNumber - handCard;
+  }
+
+  private findNextWay(handAsNumbers: number[], initialStack: {
+    up: boolean,
+    id: number,
+    lastCard: number
+  }[]):any[]{
+    const results:any[] = [];
+    handAsNumbers.forEach((handCard) => {
+      const waysPerNumber:any[] = [];
+      initialStack.forEach((stack, stackID) => {
+        const dist = stack.up ? handCard - stack.lastCard : stack.lastCard - handCard;
+
+        if(dist === -10 || dist > 0){
+          const nextHand = handAsNumbers.filter((h) => h !== handCard);
+          let nextStacks = initialStack.map(s => {
+            const lastCard = s.id === stackID ? handCard: s.lastCard;
+            return ({
+              up: s.up,
+              id: s.id,
+              lastCard: lastCard
+            })
+          });
+          const way = {
+            hand: handCard,
+            dist: dist,
+            stack: stack.id,
+            next: this.findNextWay(nextHand, nextStacks)
+          }
+          waysPerNumber.push(way);
+        }
+        
+      });
+      if(waysPerNumber.length){
+        results.push(waysPerNumber);
+      }
+    });
+    return results;
+  }
+
+  private findAllWays():any[]{
+    
+    const handAsNumbers: number[] = this.player.cards.map(c => c.value);
+    const initialGameStacks: Stack[] = JSON.parse(JSON.stringify(this.game.stacks));
+
+    const results:any[] = [];
+    handAsNumbers.forEach((handCard) => {
+      const waysPerNumber:any[] = [];
+      initialGameStacks.forEach((stack, stackID) => {
+        const dist = this.getDistance(handCard, stack);
+
+        if(dist === -10 || dist > 0 && dist){
+          const nextHand = handAsNumbers.filter((h) => h !== handCard);
+          let nextStacks = initialGameStacks.map((s => {
+            const lastCard = s.id === stackID ? handCard: s.cards[s.cards.length - 1];
+            return ({
+              up: s.up,
+              id: s.id,
+              lastCard: lastCard
+            })
+          }));
+          const way = {
+            hand: handCard,
+            dist: dist,
+            stack: stack.id,
+            next: this.findNextWay(nextHand, nextStacks)
+          }
+          waysPerNumber.push(way);
+        }
+        
+      });
+      if(waysPerNumber.length){
+        results.push(waysPerNumber);
+      }
+    });
+    return results;
+  }
+
+
+  
 }

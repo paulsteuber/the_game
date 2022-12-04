@@ -36,7 +36,14 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-
+       
+      const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
+      
+      console.log("STACK FROM REFILLSTACK", game.stacks)
+      const plDecision = new PlayerDecision(otherPlayers[0], game);
+      const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
+      console.log("BEST WAY", bestPos);
+      /** 
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
         const plDecision = new PlayerDecision(player, game);
@@ -51,7 +58,7 @@ export function RefillStack() {
             );
             game.stacks[way.stack_id].cards.push(way.hand.value);
 
-            //setGameStore(game);
+            setGameStore(game);
             console.log(
               `Player ${playerIndex + 1} wanna play Card ${
                 way.hand.value
@@ -61,8 +68,10 @@ export function RefillStack() {
         });
         console.log(`Player ${playerIndex + 1} has played`);
       });
+      */
+
       game.status.allowUserToPlay = true;
-      //setGameStore(game);
+      setGameStore(game);
       return;
     }
 

@@ -31,10 +31,15 @@ function App() {
         <aside className="state">
           initialized : {gameStore.initialized ? "true" : "false"}
           <br></br>
-          players:{" "}
-          {JSON.stringify(
-            gameStore.players.map((pl) => pl.cards.map((card) => card.value))
-          )}
+          {
+            gameStore.players.map((pl, plID) => {
+              return (
+                <>
+                  <h5>Player {plID}</h5>
+                  <h6>Cards: {pl.cards.map((card) => card.value).toString()}</h6>
+                </>)
+            })
+          }
           <br></br>
           refillStack: {JSON.stringify(gameStore.refillStack)}
           <br></br>
