@@ -16,11 +16,12 @@ export class PlayerDecision {
     return flattenAllWays;
   }
 
-  public getBestPossibility(minimumCardsToPlay: number): Possibility {
+  public getBestPossibility(minimumCardsToPlay: number): Possibility | false {
     //filter all poss with less than minimum cards length
     const possMinimum = this.allPossibilities.filter(
       (pos: Possibility) => pos.way.length >= minimumCardsToPlay
     );
+    if(!possMinimum.length) false;
     console.log("POSS MINIMUM",possMinimum)
     const bestPossibility = possMinimum.reduce(function (prev, curr) {
       return prev.weight < curr.weight ? prev : curr;

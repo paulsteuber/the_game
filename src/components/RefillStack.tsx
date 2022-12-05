@@ -30,26 +30,30 @@ export function RefillStack() {
       
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
-        const plDecision = new PlayerDecision(player, game);
-        const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
-        console.log("PLAYER ", playerIndex, " - BEST WAY - ", bestPos);
-        bestPos.way.forEach((way) => {
-          if (
-            TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])
-          ) {
-            game.players[playerIndex + 1].cards = player.cards.filter(
-              (card) => card.value !== way.hand
-            );
-            game.stacks[way.stack_id].cards.push(way.hand);
-            setGameStore(game);
-            console.log(
-              `Player ${playerIndex + 1} wanna play Card ${
-                way.hand
-              } to Stack ${way.stack_id}`
-            );
-          }
-        });
-
+        if(player.cards.length){
+          const plDecision = new PlayerDecision(player, game);
+          const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
+          if(bestPos){
+            bestPos.way.forEach((way) => {
+              if (
+                TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])
+              ) {
+                game.players[playerIndex + 1].cards = player.cards.filter(
+                  (card) => card.value !== way.hand
+                );
+                game.stacks[way.stack_id].cards.push(way.hand);
+                setGameStore(game);
+                console.log(
+                  `Player ${playerIndex + 1} wanna play Card ${
+                    way.hand
+                  } to Stack ${way.stack_id}`
+                );
+              }
+            });
+            setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
+          }        
+      }
+        
       });
 
       game.status.allowUserToPlay = true;
