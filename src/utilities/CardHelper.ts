@@ -15,7 +15,7 @@ export default class CardHelper {
   static cardsPerPlayer(playersCount: number) {
     switch (playersCount) {
       case 4:
-        return 7;
+        return 6;
         break;
       case 5:
         return 6;

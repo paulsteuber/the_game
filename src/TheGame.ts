@@ -31,6 +31,32 @@ export default class TheGame {
     }
     return players;
   }
+  static drawNewCards(playerID: number, game: Game):Game{
+      const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
+      const player = game.players[playerID];
+
+      const usersCardsCount = player.cards.length;
+      for (let i = 0; i < cardsPerPlayer - usersCardsCount; i++) {
+        const nextRefillCard =game.refillStack.shift();
+        if (nextRefillCard) {
+          const drawnCard: PlayerCard = {
+            value: nextRefillCard,
+            stackStatus: { a: true, b: true, c: true, d: true },
+          };
+          player.cards.push(drawnCard);
+        }
+      }
+      player.cards = CardHelper.sortCards(player.cards);
+
+      //refresh card status
+      game.players = TheGame.refreshPlayerCardsStatus(
+        game.players,
+        game.stacks
+      );
+      return game;
+
+
+  }
   static givePlayersCards(game: Game): Game {
     const countCards: number = CardHelper.cardsPerPlayer(game.players.length);
     //give all players their first cards
@@ -49,6 +75,7 @@ export default class TheGame {
   }
 
   static isCardAllowed(cardValue: number, stack: Stack): boolean {
+    console.log("CARD", cardValue,"STACK",stack.id," LAST NUM ", stack.cards[stack.cards.length - 1])
     if (!stack.cards.length) return true;
     const lastStackNumber: number = stack.cards[stack.cards.length - 1];
     if (stack.up) {

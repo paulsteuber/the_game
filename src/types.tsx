@@ -31,5 +31,5 @@ export type Game = {
 };
 export type Possibility = {
   weight: number;
-  way: [{ hand: PlayerCard; dist: number; stack_id: number }];
+  way: [{ hand: number; dist: number; stack_id: number }];
 };

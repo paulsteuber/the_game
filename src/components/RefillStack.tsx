@@ -12,26 +12,15 @@ export function RefillStack() {
     let game: Game = { ...gameStore };
     const isAllowed = TheGame.isAllowedFinishMove(game);
     const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
+
+    
+
     if (isAllowed) {
       game.status.allowUserToPlay = false;
-      //Draw new cards
-      const usersCardsCount = game.players[0].cards.length;
-      for (let i = 0; i < cardsPerPlayer - usersCardsCount; i++) {
-        if (game.refillStack.length) {
-          const drawnCard: PlayerCard = {
-            value: game.refillStack.shift(),
-            stackStatus: { a: true, b: true, c: true, d: true },
-          };
-          game.players[0].cards.push(drawnCard);
-        }
-      }
-      game.players[0].cards = CardHelper.sortCards(game.players[0].cards);
 
-      //refresh card status
-      game.players = TheGame.refreshPlayerCardsStatus(
-        game.players,
-        game.stacks
-      );
+      //Draw new cards
+      setGameStore(TheGame.drawNewCards(0, game));
+
       //let the other player play!
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
@@ -39,36 +28,29 @@ export function RefillStack() {
        
       const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
       
-      console.log("STACK FROM REFILLSTACK", game.stacks)
-      const plDecision = new PlayerDecision(otherPlayers[0], game);
-      const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
-      console.log("BEST WAY", bestPos);
-      /** 
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
         const plDecision = new PlayerDecision(player, game);
         const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
-        console.log("PLAYER ", playerIndex, " --- ", bestPos);
-        bestPos.way.reverse().forEach((way) => {
+        console.log("PLAYER ", playerIndex, " - BEST WAY - ", bestPos);
+        bestPos.way.forEach((way) => {
           if (
-            TheGame.isCardAllowed(way.hand.value, game.stacks[way.stack_id])
+            TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])
           ) {
             game.players[playerIndex + 1].cards = player.cards.filter(
-              (card) => card !== way.hand
+              (card) => card.value !== way.hand
             );
-            game.stacks[way.stack_id].cards.push(way.hand.value);
-
+            game.stacks[way.stack_id].cards.push(way.hand);
             setGameStore(game);
             console.log(
               `Player ${playerIndex + 1} wanna play Card ${
-                way.hand.value
+                way.hand
               } to Stack ${way.stack_id}`
             );
           }
         });
-        console.log(`Player ${playerIndex + 1} has played`);
+
       });
-      */
 
       game.status.allowUserToPlay = true;
       setGameStore(game);
