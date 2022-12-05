@@ -51,7 +51,9 @@ export function RefillStack() {
               }
             });
             setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
-          }        
+          } else {
+            alert("GAME OVER");
+          }     
       }
         
       });
