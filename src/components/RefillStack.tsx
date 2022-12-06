@@ -7,15 +7,21 @@ import { PlayerDecision } from "../utilities/PlayerDecision";
 
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
+
+  /**
+   *  FINISH MOVE
+   */
   const finishMove = () => {
     let game: Game = { ...gameStore };
     const isAllowed = TheGame.isAllowedFinishMove(game);
-
     if (isAllowed) {
       game.status.allowUserToPlay = false;
 
+      //Check if Player have won the game
+      const winStatus = TheGame.checkPlayersAreWinner(game);
+      if(winStatus) console.log("Ihr habt gewonnen!");
       //Draw new cards
-      setGameStore(TheGame.drawNewCards(0, game));
+      if(game.refillStack.length) setGameStore(TheGame.drawNewCards(0, game));
 
       //let the other player play!
       const otherPlayers = game.players.filter(

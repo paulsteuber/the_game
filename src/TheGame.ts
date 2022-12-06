@@ -132,4 +132,12 @@ export default class TheGame {
 
     return wannaPlay;
   }
+
+  static checkPlayersAreWinner(game: Game):boolean{
+    const playerWithCards = game.players.filter(p => p.cards.length > 0);
+    if(playerWithCards.length === 0 && game.refillStack.length === 0){
+      return true;
+    }
+    return false;
+  }
 }

@@ -12,6 +12,13 @@
 $dark: #242424
 $bright: #e2e2e2
 
+@keyframes card-reject
+  25%
+    transform: translateX(-10px)
+  75%
+    transform: translateX(10px)
+ 
+
 /**
   STYLING
   */
@@ -21,6 +28,16 @@ html, body
   color: $bright
 #app
   .stack
+    transition: 0.15s all ease-in-out
+    cursor: url("https://icons.getbootstrap.com/assets/icons/hand-thumbs-up-fill.svg"), auto
+    &.ondrag-card-allowed
+      transform: scale(1.1)
+      background: #19ff25
+    &.ondrag-card-reject
+      background: #ff2020
+      animation-name: card-reject
+      animation-duration: 0.2s
+      animation-iteration-count: infinite
     .top-card
       width: 100%
       position: relative
@@ -57,6 +74,7 @@ html, body
     .user-card
       width: 100%
       position: relative
+      cursor: grab
       &::after
         content:""
         width: calc(100% - 12px)

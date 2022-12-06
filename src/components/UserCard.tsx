@@ -29,8 +29,12 @@ export function UserCard(card: PlayerCard) {
       setGameStore(game);
     }
   };
+  const dragStarted = (e, card: PlayerCard) => {
+    console.log("DRAG STARTED", card.value);
+    e.dataTransfer.setData("card", card.value);
+  }
   return (
-    <div draggable className="card-wrapper m-2 p-2 d-flex align-items-center flex-column">
+    <div draggable onDragStart={(e) => dragStarted(e, card)} className="card-wrapper m-2 p-2 d-flex align-items-center flex-column">
       <div className="card-header shadow">
         <div className="btn-group" role="group" aria-label="Basic example">
           <button
