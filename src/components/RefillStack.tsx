@@ -7,13 +7,9 @@ import { PlayerDecision } from "../utilities/PlayerDecision";
 
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
-
   const finishMove = () => {
     let game: Game = { ...gameStore };
     const isAllowed = TheGame.isAllowedFinishMove(game);
-    const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
-
-    
 
     if (isAllowed) {
       game.status.allowUserToPlay = false;
@@ -25,8 +21,6 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-       
-      const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
       
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
@@ -68,14 +62,15 @@ export function RefillStack() {
   return (
     <>
       <div
-        className="refill-stack d-flex flex-column align-items-center"
+        className={gameStore.status.allowUserToPlay? refillStackClassNames+" is-allowed" : refillStackClassNames }
         onClick={() => {
           finishMove();
         }}
       >
-        <h1>Refill</h1>
-        <h2>Stack</h2>
+        <h1>End</h1>
+        <h2>move</h2>
       </div>
     </>
   );
 }
+const refillStackClassNames = "refill-stack d-flex flex-column align-items-center";

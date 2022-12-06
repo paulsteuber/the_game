@@ -75,7 +75,6 @@ export default class TheGame {
   }
 
   static isCardAllowed(cardValue: number, stack: Stack): boolean {
-    console.log("CARD", cardValue,"STACK",stack.id," LAST NUM ", stack.cards[stack.cards.length - 1])
     if (!stack.cards.length) return true;
     const lastStackNumber: number = stack.cards[stack.cards.length - 1];
     if (stack.up) {
