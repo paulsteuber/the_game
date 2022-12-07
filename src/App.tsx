@@ -30,6 +30,7 @@ function App() {
         )}
         <aside className="state">
           initialized : {gameStore.initialized ? "true" : "false"}
+          gameStatus : {JSON.stringify(gameStore.status)}
           <br></br>
           {
             gameStore.players.map((pl, plID) => {

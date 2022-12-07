@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
+import { animated, useTransition } from "react-spring";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
+import "../assets/TableStack.sass";
 import { PlayerCard, Stack } from "../types";
 
 export function TableStack(stack: Stack) {
@@ -46,29 +48,29 @@ export function TableStack(stack: Stack) {
     //console.log(card);
   };
   
-
+  const transition = useTransition(stack.cards.length, {
+    from: { position: "absolute", opacity: 0, scale: 0},
+    enter: { opacity: 1, scale: 1},
+    leave: {  opacity: 0, scale: 0},
+  });
   return (
-    <div onDragOver={(e) => onDragOver(e)} onDragLeave={(e)=> onDragLeave(e)} onDrop={(e)=>onDropped(e)} className={onDragOverStatus}>
-      <div className="stack-header d-flex">
-        <h3 className="title">{abcd[stack.id]}</h3>
-        <div className="type">
-          {stack.up && <i className="bi bi-arrow-up"></i>}
-          {!stack.up && <i className="bi bi-arrow-down"></i>}
+  
+      <div onDragOver={(e) => onDragOver(e)} onDragLeave={(e)=> onDragLeave(e)} onDrop={(e)=>onDropped(e)} className={onDragOverStatus}>
+        <div className="stack-header d-flex">
+          <h3 className="title">{abcd[stack.id]}</h3>
+          <div className="type">
+            {stack.up && <i className="bi bi-arrow-up"></i>}
+            {!stack.up && <i className="bi bi-arrow-down"></i>}
+          </div>
+        </div>
+        <div className="top-card rounded-2 my-2 p-2 d-flex justify-content-center align-items-center">
+          { transition((style)=>(
+            <animated.div style={style} className="number h3 p-4 m-0 fw-bolder">
+              {stack.cards[stack.cards.length - 1]}
+            </animated.div>
+            ))}
         </div>
       </div>
-      <div className="top-card rounded-2 my-2 p-2 d-flex justify-content-center align-items-center">
-        {!stack.cards.length ? (
-          stack.up ? (
-            <div className="h3 p-4 m-0 fw-bolder">1</div>
-          ) : (
-            <div className="h3 p-4 m-0 fw-bolder">100</div>
-          )
-        ) : (
-          <div className="h3 p-4 m-0 fw-bolder">
-            {stack.cards[stack.cards.length - 1]}
-          </div>
-        )}
-      </div>
-    </div>
+    
   );
 }
