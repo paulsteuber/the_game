@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import { PlayerCard, Stack } from "../types";
+import { useTransition, animated } from "react-spring";
 
 export function UserCard(card: PlayerCard) {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
@@ -32,9 +33,13 @@ export function UserCard(card: PlayerCard) {
   const dragStarted = (e, card: PlayerCard) => {
     console.log("DRAG STARTED", card.value);
     e.dataTransfer.setData("card", card.value);
-  }
+  };
   return (
-    <div draggable onDragStart={(e) => dragStarted(e, card)} className="card-wrapper m-2 p-2 d-flex align-items-center flex-column">
+    <div
+      draggable
+      onDragStart={(e) => dragStarted(e, card)}
+      className="card-wrapper m-2 p-2 d-flex align-items-center flex-column"
+    >
       <div className="card-header shadow">
         <div className="btn-group" role="group" aria-label="Basic example">
           <button
