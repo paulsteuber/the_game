@@ -55,7 +55,7 @@ export function TableStack(stack: Stack) {
   });
   return (
   
-      <div onDragOver={(e) => onDragOver(e)} onDragLeave={(e)=> onDragLeave(e)} onDrop={(e)=>onDropped(e)} className={onDragOverStatus}>
+      <div onDragOver={(e) => onDragOver(e)} onDragLeave={(e)=> onDragLeave(e)} onDrop={(e)=>onDropped(e)} className={(stack.cards.length > 1 ? "multiple-cards ":" " )+onDragOverStatus}>
         <div className="stack-header d-flex">
           <h3 className="title">{abcd[stack.id]}</h3>
           <div className="type">

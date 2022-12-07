@@ -5,6 +5,7 @@ import { Header } from "./components/Header";
 import { Game } from "./types";
 import TheGame from "./TheGame";
 import { User } from "./components/User";
+import { IntroOverlay } from "./components/IntroOverlay";
 import { Table } from "./components/Table";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   return (
     <GameContext.Provider value={valueGameStore}>
       <div className="App" id="app">
+        <IntroOverlay />
         <Header />
         {gameStore.players.length && (
           <>
