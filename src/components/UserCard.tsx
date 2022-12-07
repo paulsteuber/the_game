@@ -4,7 +4,9 @@ import TheGame from "../TheGame";
 import { PlayerCard, Stack } from "../types";
 import { useTransition, animated } from "react-spring";
 
-export function UserCard(card: PlayerCard) {
+export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
+  const card = props.card;
+  const cardIndex = props.cardIndex;
   const { gameStore, setGameStore } = useContext<any>(GameContext);
   const btnStatus = ["btn-light", "btn-danger"];
 
@@ -34,8 +36,15 @@ export function UserCard(card: PlayerCard) {
     console.log("DRAG STARTED", card.value);
     e.dataTransfer.setData("card", card.value);
   };
-  return (
-    <div
+  const transition = useTransition(true, {
+    from: { opacity: 0, scale: 1.1, y: 100 },
+    enter: { opacity: 1, scale: 1, y: 0 },
+    leave: { opacity: 0, scale: 0, y: 100 },
+    delay: cardIndex*100,
+  });
+  return (transition((style) => (
+    <animated.div key={card.value} style={style}>
+<div
       draggable
       onDragStart={(e) => dragStarted(e, card)}
       className="card-wrapper m-2 p-2 d-flex align-items-center flex-column"
@@ -92,5 +101,7 @@ export function UserCard(card: PlayerCard) {
         <span className="h1 fw-bolder m-0 p-4">{card.value}</span>
       </div>
     </div>
-  );
+    </animated.div>
+    
+  )));
 }
