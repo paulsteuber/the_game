@@ -25,7 +25,6 @@ export function TableStack(stack: Stack) {
   const onDragLeave = (e: any) => {
     e.preventDefaulft;
     setOnDragOverStatus(componentClasses)
-    console.log("onDragLeave");
   };
   const onDropped = (e: any) => {
     e.preventDefaulft;
@@ -39,7 +38,6 @@ export function TableStack(stack: Stack) {
       game.stacks[stack.id].cards.push(card);
       // and remove card from user
       game.players[0].cards = game.players[0].cards.filter((c:PlayerCard) => c.value !== card);
-      console.log(game);
       setGameStore(game);
     } else {
       console.log("Karte ist nicht erlaubt")

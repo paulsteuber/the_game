@@ -6,3 +6,40 @@
   width: 100vw
   z-index: 999
   background:#242424
+  .inner-overlay
+    position: fixed
+    top:0
+    left: 0
+    height: 100%
+    width: 100%
+    background:#242424
+    &.overlay-one
+      color: #242424
+      background-color: #e2e2e2
+      z-index: 1010
+      .bigtitle
+        font-size: 6rem
+        letter-spacing: 0.3rem
+    &.overlay-two
+      z-index: 1009
+      .overlay-header
+        text-align: center
+  .tutorial-card
+    position: relative
+    width: 50px
+    height: 60px
+    display: inline-flex
+    justify-content: center
+    align-items: center
+    &::after
+        content:""
+        width: calc(100% - 12px)
+        height: calc(100% - 12px)
+        border-radius: 16px
+        display: block
+        position: absolute
+        top: 6px
+        left:6px
+        z-index: -1
+        background: rgb(251,74,151)
+        background: radial-gradient(circle, rgba(251,74,151,1) 0%, rgba(148,187,233,1) 100%)
