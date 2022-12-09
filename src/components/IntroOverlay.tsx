@@ -47,7 +47,7 @@ export function IntroOverlay() {
               <animated.p style={overlayTwoSlideIn} className="h1 fw-bolder">How does it works?</animated.p>
               <animated.p style={overlayTwoSlideIn} className="h3">A short tutorial</animated.p>
             </div>
-            <div className="overlay-main p-4">
+            <div className="overlay-main p-4 container">
               <div className="tutorial">
                {tutorialSlides.map(slide => <div className="tutorial-slide">{slide}</div>)}
               </div>

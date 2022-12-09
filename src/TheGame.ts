@@ -23,8 +23,14 @@ export default class TheGame {
   }
   static initPlayers(playerCount: number): Player[] {
     let players: Player[] = [];
+    let playerNames = ["Paul", "Mai", "Jürgen", "Eva", "Florian", "Phoung Anh"]
     for (let i = 0; i < playerCount; i++) {
+      const index = Math.floor(Math.random() * playerNames.length);
+
+      // Remove the element at the random index
+      const name = playerNames.splice(index, 1)[0];
       let newPlayer = {
+        name: name,
         cards: [],
       };
       players.push(newPlayer);

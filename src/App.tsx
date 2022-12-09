@@ -7,6 +7,7 @@ import TheGame from "./TheGame";
 import { User } from "./components/User";
 import { IntroOverlay } from "./components/IntroOverlay";
 import { Table } from "./components/Table";
+import { OtherPlayers } from "./components/OtherPlayers";
 
 function App() {
   /**STORE */
@@ -26,6 +27,7 @@ function App() {
         <Header />
         {gameStore.players.length && (
           <>
+            <OtherPlayers/>
             <Table />
             <User />
           </>
@@ -38,7 +40,7 @@ function App() {
             gameStore.players.map((pl, plID) => {
               return (
                 <>
-                  <h5>Player {plID}</h5>
+                  <h5>Player {pl.name}</h5>
                   <h6>Cards: {pl.cards.map((card) => card.value).toString()}</h6>
                 </>)
             })

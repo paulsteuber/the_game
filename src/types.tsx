@@ -12,6 +12,7 @@ export type TenBagger = {
   stack: [{ stackCard: number; handCard: number; stackId: number }];
 };
 export type Player = {
+  name: string,
   cards: PlayerCard[];
 };
 export type Stack = {

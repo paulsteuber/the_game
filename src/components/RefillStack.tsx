@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
+import "../assets/RefillStack.sass";
 import { Game, Player, PlayerCard } from "../types";
 import CardHelper from "../utilities/CardHelper";
 import { PlayerDecision } from "../utilities/PlayerDecision";
@@ -79,4 +80,4 @@ export function RefillStack() {
     </>
   );
 }
-const refillStackClassNames = "refill-stack d-flex flex-column align-items-center";
+const refillStackClassNames = "refill-stack d-flex flex-column align-items-center p-3";
