@@ -1,6 +1,5 @@
 import { Game, Player, PlayerCard, Stack } from "./types";
 import CardHelper from "./utilities/CardHelper";
-import PlayHelper from "./utilities/PlayHelper";
 
 export default class TheGame {
   constructor() {}
@@ -97,6 +96,11 @@ export default class TheGame {
       return lastStackNumber + 10 === cardValue;
     }
   }
+  static generateCardStatus(cardValue: number, stack: Stack): boolean | 10{
+    if(!this.isCardAllowed(cardValue, stack)) return false;
+    if(this.isCardTenBagger(cardValue, stack)) return 10;
+    return true;
+  }
   static refreshPlayerCardsStatus(
     players: Player[],
     stacks: Stack[]
@@ -104,10 +108,10 @@ export default class TheGame {
     const refreshedPlayerCards = players.map((player) => {
       const refreshedCards = player.cards.map((card) => {
         card.stackStatus = {
-          a: this.isCardAllowed(card.value, stacks[0]),
-          b: this.isCardAllowed(card.value, stacks[1]),
-          c: this.isCardAllowed(card.value, stacks[2]),
-          d: this.isCardAllowed(card.value, stacks[3]),
+          a: this.generateCardStatus(card.value, stacks[0]),
+          b: this.generateCardStatus(card.value, stacks[1]),
+          c: this.generateCardStatus(card.value, stacks[2]),
+          d: this.generateCardStatus(card.value, stacks[3]),
         };
         return card;
       });

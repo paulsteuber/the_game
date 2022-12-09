@@ -1,15 +1,11 @@
 import CardHelper from "./utilities/CardHelper";
 export type PlayerCard = {
   value: number;
-  stackStatus: { a: boolean; b: boolean; c: boolean; d: boolean };
+  stackStatus: { a: boolean| 10; b: boolean | 10; c: boolean | 10; d: boolean| 10 };
 };
 export type WannaPlay = {
   card: number;
   targetStackId: number;
-};
-export type TenBagger = {
-  hand: [{ cards: number[] }];
-  stack: [{ stackCard: number; handCard: number; stackId: number }];
 };
 export type Player = {
   name: string,

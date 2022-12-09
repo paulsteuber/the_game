@@ -8,7 +8,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
   const card = props.card;
   const cardIndex = props.cardIndex;
   const { gameStore, setGameStore } = useContext<any>(GameContext);
-  const btnStatus = ["btn-light", "btn-danger"];
+  const btnStatus = ["btn-light","btn-primary", "btn-danger"];
 
   useEffect(() => {}, []);
   const addCardToStack = (stackId: number) => {
@@ -42,6 +42,13 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
     leave: { opacity: 0, scale: 0, y: 100 },
     delay: cardIndex*100,
   });
+
+  const cardStatusBtn = (stackStatus: boolean | 10) => {
+    if(stackStatus == true) return btnStatus[0];
+    if(stackStatus == 10) return btnStatus[1]
+    return btnStatus[2]
+
+  };
   return (transition((style) => (
     <animated.div key={card.value} style={style}>
 <div
@@ -53,8 +60,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
         <div className="btn-group" role="group" aria-label="Basic example">
           <button
             type="button"
-            className={
-              (card.stackStatus.a ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            className={cardStatusBtn(card.stackStatus.a) + " btn btn-sm"
             }
             onClick={() => {
               addCardToStack(0);
@@ -64,8 +70,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
           </button>
           <button
             type="button"
-            className={
-              (card.stackStatus.b ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            className={cardStatusBtn(card.stackStatus.b) + " btn btn-sm"
             }
             onClick={() => {
               addCardToStack(1);
@@ -75,8 +80,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
           </button>
           <button
             type="button"
-            className={
-              (card.stackStatus.c ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            className={cardStatusBtn(card.stackStatus.c) + " btn btn-sm"
             }
             onClick={() => {
               addCardToStack(2);
@@ -86,8 +90,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
           </button>
           <button
             type="button"
-            className={
-              (card.stackStatus.d ? btnStatus[0] : btnStatus[1]) + " btn btn-sm"
+            className={cardStatusBtn(card.stackStatus.d) + " btn btn-sm"
             }
             onClick={() => {
               addCardToStack(3);
