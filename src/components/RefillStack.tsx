@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import "../assets/RefillStack.sass";
@@ -8,6 +8,7 @@ import { PlayerDecision } from "../utilities/PlayerDecision";
 
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
+  const [test, setTest] = useState(1);
 
   /**
    *  FINISH MOVE
@@ -28,7 +29,15 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-
+      let x = 1;
+      setTimeout(() => {
+        x = x + 1;
+        setTest(x);
+        setTimeout(() => {
+          x = x + 1;
+          setTest(x);
+        }, 2000);
+      }, 2000);
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
         if (player.cards.length) {
@@ -75,7 +84,7 @@ export function RefillStack() {
           finishMove();
         }}
       >
-        <h1>End</h1>
+        <h1>End {test}</h1>
         <h2>move</h2>
       </div>
     </>
