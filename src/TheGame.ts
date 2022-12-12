@@ -44,6 +44,7 @@ export default class TheGame {
       const player = game.players[playerID];
 
       const usersCardsCount = player.cards.length;
+      cardsPerPlayer - usersCardsCount < 2 ? alert("ERROR "+playerID+" has more cards than allowed"):"";
       for (let i = 0; i < cardsPerPlayer - usersCardsCount; i++) {
         const nextRefillCard =game.refillStack.shift();
         if (nextRefillCard) {
@@ -132,7 +133,6 @@ export default class TheGame {
     const cardsPerPlayer: number = CardHelper.cardsPerPlayer(
       game.players.length
     );
-    console.log( "LAST MOVE COUNT", game.players[0].lastMoveCardsCount," | Minimum ", minimumPlayedCards)
     if (game.players[0].cards.length <= game.players[0].lastMoveCardsCount - minimumPlayedCards) {
       return true;
     }

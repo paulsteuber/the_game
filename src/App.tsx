@@ -48,6 +48,8 @@ function App() {
           stacks C {JSON.stringify(gameStore.stacks[2].cards)}
           <br></br>
           stacks D {JSON.stringify(gameStore.stacks[3].cards)}
+          <br></br>
+          played Cards {(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4)}
         </aside>
       </div>
     </GameContext.Provider>
