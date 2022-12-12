@@ -56,7 +56,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
       onDragStart={(e) => dragStarted(e, card)}
       className="card-wrapper m-2 p-2 d-flex align-items-center flex-column"
     >
-      <div className="card-header shadow">
+      <div className="card-header shadow my-3">
         <div className="btn-group" role="group" aria-label="Basic example">
           <button
             type="button"
@@ -100,7 +100,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
           </button>
         </div>
       </div>
-      <div className="user-card rounded-2 shadow py-4 m-2 d-flex justify-content-center align-items-center">
+      <div className="user-card rounded-2 shadow py-4 d-flex justify-content-center align-items-center">
         <span className="h1 fw-bolder m-0 p-4">{card.value}</span>
       </div>
     </div>

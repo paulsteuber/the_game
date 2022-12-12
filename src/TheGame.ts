@@ -8,6 +8,7 @@ export default class TheGame {
     return {
       status: {
         allowUserToPlay: true,
+        gameOver: false
       },
       initialized: false,
       players: [],
@@ -22,7 +23,7 @@ export default class TheGame {
   }
   static initPlayers(playerCount: number): Player[] {
     let players: Player[] = [];
-    let playerNames = ["Paul", "Mai", "Jürgen", "Eva", "Florian", "Phoung Anh"]
+    let playerNames = ["Anna", "Ben", "Charles", "Daniela", "Erica", "Florian", "Gerald", "Hannah" ]
     for (let i = 0; i < playerCount; i++) {
       const index = Math.floor(Math.random() * playerNames.length);
 
@@ -136,9 +137,6 @@ export default class TheGame {
     }
     return false;
   }
-  static letOtherPlayerPlay(game: Game, player:Player, playerIndex:number){
-
-  }
   static cardsPlayerWannaPlay(
     player: Player,
     game: Game,
@@ -148,7 +146,12 @@ export default class TheGame {
 
     return wannaPlay;
   }
-
+  static otherPlayersHaveCards(players: Player[]):boolean{
+    players.forEach(player => {
+      if(player.cards.length) return true
+    });
+    return false
+  }
   static checkPlayersAreWinner(game: Game):boolean{
     const playerWithCards = game.players.filter(p => p.cards.length > 0);
     if(playerWithCards.length === 0 && game.refillStack.length === 0){

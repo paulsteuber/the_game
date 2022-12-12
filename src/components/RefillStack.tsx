@@ -36,16 +36,8 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-      let x = 1;
-      setTimeout(() => {
-        x = x + 1;
-        setTest(x);
-        setTimeout(() => {
-          x = x + 1;
-          setTest(x);
-        }, 2000);
-      }, 2000);
-      otherPlayers.forEach((player: Player, playerIndex: number) => {
+
+      const letOtherPlayerPlay = (player: Player, playerIndex: number) =>{
         const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
         if (player.cards.length) {
           const plDecision = new PlayerDecision(player, game);
@@ -67,10 +59,25 @@ export function RefillStack() {
             });
             setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
           } else {
+            game.status.gameOver = true;
+            setGameStore(game)
             alert("GAME OVER");
           }
         }
+      }
+      otherPlayers.forEach((player: Player, playerIndex: number) => {
+        letOtherPlayerPlay(player, playerIndex)
       });
+      //if user has no cards anymore let the other player play
+      if(!game.status.gameOver && game.players[0].cards.length === 0){
+        alert("Other Players playing alone");
+        while(!game.status.gameOver && TheGame.otherPlayersHaveCards(otherPlayers)){
+          otherPlayers.forEach((player: Player, playerIndex: number) => {
+            letOtherPlayerPlay(player, playerIndex)
+          });
+        }
+      }
+
 
       game.status.allowUserToPlay = true;
       setGameStore(game);
@@ -91,11 +98,10 @@ export function RefillStack() {
           finishMove();
         }}
       >
-        <h1>End {test}</h1>
-        <h2>move</h2>
+        <p className="fw-bolder h4 text-center">finish move</p>
       </div>
     </>
   );
 }
 const refillStackClassNames =
-  "refill-stack d-flex flex-column align-items-center p-3";
+  "refill-stack d-flex flex-column align-items-center justify-content-center p-3";

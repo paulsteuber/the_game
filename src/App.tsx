@@ -8,6 +8,7 @@ import { User } from "./components/User";
 import { IntroOverlay } from "./components/IntroOverlay";
 import { Table } from "./components/Table";
 import { OtherPlayers } from "./components/OtherPlayers";
+import { GameStartOverlay } from "./components/GameStartOverlay";
 
 function App() {
   /**STORE */
@@ -24,6 +25,7 @@ function App() {
     <GameContext.Provider value={valueGameStore}>
       <div className="App" id="app">
         <IntroOverlay />
+        <GameStartOverlay />
         <Header />
         {gameStore.players.length && (
           <>
@@ -35,16 +37,7 @@ function App() {
         <aside className="state">
           initialized : {gameStore.initialized ? "true" : "false"}
           gameStatus : {JSON.stringify(gameStore.status)}
-          <br></br>
-          {
-            gameStore.players.map((pl, plID) => {
-              return (
-                <>
-                  <h5>Player {pl.name}</h5>
-                  <h6>Cards: {pl.cards.map((card) => card.value).toString()}</h6>
-                </>)
-            })
-          }
+          
           <br></br>
           refillStack: {JSON.stringify(gameStore.refillStack)}
           <br></br>

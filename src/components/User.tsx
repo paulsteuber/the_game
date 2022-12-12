@@ -16,7 +16,7 @@ export function User() {
     : "play-forbidden";
   return (
     <div className="d-flex justify-content-center align-items-center flex-column user">
-      User Cards LastCardCount{gameStore.players[0].lastMoveCardsCount}
+      Your Cards
       <div className={allowUserToPlayClass + " d-flex justify-content-center"}>
         {userCardsComponents}
       </div>
