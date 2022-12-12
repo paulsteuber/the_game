@@ -8,7 +8,8 @@ export default class TheGame {
     return {
       status: {
         allowUserToPlay: true,
-        gameOver: false
+        gameOver: false,
+        playerCountOverlayHide: false
       },
       initialized: false,
       players: [],

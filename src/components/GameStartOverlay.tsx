@@ -14,12 +14,13 @@ export function GameStartOverlay(){
   const setPlayerCount = (count: number): void => {
     if (gameStore.initialized) return;
     let game = { ...gameStore };
+    game.status.playerCountOverlayHide = true;
+    setGameStore(game)
     //init players
     game.players = TheGame.initPlayers(count);
     game = TheGame.givePlayersCards(game);
-    setOverlayHide(true);
+    game.initialized = true;
     setTimeout(()=>{
-      game.initialized = true;
       setGameStore(game);
     }, 1700)
     
@@ -30,10 +31,18 @@ export function GameStartOverlay(){
   };
 
   const styleOverlay = useSpring({
-    opacity: overlayHide ? 0: 1,
-    y: overlayHide ? window.innerHeight * -1.5: 0,
-    config: {duration: 1500, easing: easings.easeInOutExpo},
-    delay: 200
+    opacity: gameStore.status.playerCountOverlayHide ? 0: 1,
+    y: gameStore.status.playerCountOverlayHide ? window.innerHeight * -1.5: 0,
+    config: {duration: 1000, easing: easings.easeInOutExpo},
+    delay: 0
+  });
+  const styleRestart = useSpring({
+    opacity: gameStore.players.length ?  1 : 0,
+    delay: 500
+  });
+  const stylePlayerCount = useSpring({
+    opacity: gameStore.players.length ?  0 : 1,
+    delay: 500
   });
 
   return(
@@ -41,37 +50,41 @@ export function GameStartOverlay(){
       <div className="container ">
         <div className="d-flex justify-content-center align-items-center flex-column pe-2">
           {!gameStore.players.length ? 
-          <>
+          <animated.div style={stylePlayerCount} className="d-flex flex-column justify-content-center">
           <p className="h2">Select the number of players</p>
+          <div className="d-flex justify-content-center">
           <div className="btn-group" role="group" aria-label="Basic example">
 
-            {[4,5,6].map(playerCount => (
-              <button
-                type="button"
-                className={"btn btn-primary " + disablePlayerButtons}
-                onClick={() => {
-                  setPlayerCount(playerCount);
-              }}
-              >{playerCount}</button>
-              )
-              )}
+              {[4,5,6].map(playerCount => (
+                <button
+                  type="button"
+                  className={"btn btn-primary btn-lg " + disablePlayerButtons}
+                  onClick={() => {
+                    setPlayerCount(playerCount);
+                }}
+                >{playerCount}</button>
+                )
+                )}
             </div>
-            </>:<div className="d-flex justify-content-center align-items-center flex-column">
-        <div className="btn-group" role="group" aria-label="Basic example">
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={() => {
-              startNewGame();
-            }}
-            title="Start New Game"
-          >
-            <i className="bi bi-arrow-counterclockwise"></i>
-          </button>
-        </div>
-      </div> }
+          </div>
           
-          
+            </animated.div>:
+            <animated.div style={styleRestart} className="d-flex justify-content-center align-items-center flex-column">
+              <p className="h2">Do you want to quit the game and restart it?</p>
+              <div className="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    startNewGame();
+                  }}
+                  title="Start New Game"
+                >
+                  <i className="bi bi-arrow-counterclockwise"></i>
+                </button>
+              </div>
+          </animated.div> 
+          }
           
         </div>
         
