@@ -25,8 +25,8 @@ export function OtherPlayer(player: Player) {
     );
   });
   return (
-    <div className="player">
-      <div className="player-head d-flex flex-column align-items-center">
+  <div className="player">
+    <div className="player-head d-flex flex-column align-items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -36,9 +36,10 @@ export function OtherPlayer(player: Player) {
           viewBox="0 0 16 16"
         >
           <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-        </svg>
-        <p className="h5 fw-bolder">{player.name}</p>
-      </div>
+      </svg>
+      <p className="h5 fw-bolder">{player.name}</p>
+      <span>{player.lastMoveCardsCount}</span>
+    </div>
       <div className="other-player-cards d-flex">{printCards}</div>
     </div>
   );

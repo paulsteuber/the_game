@@ -30,6 +30,7 @@ export default class TheGame {
       const name = playerNames.splice(index, 1)[0];
       let newPlayer = {
         name: name,
+        lastMoveCardsCount: 0,
         cards: [],
       };
       players.push(newPlayer);
@@ -74,6 +75,7 @@ export default class TheGame {
           stackStatus: { a: true, b: true, c: true, d: true },
         });
       }
+      game.players[p].lastMoveCardsCount = game.players[p].cards.length
       game.players[p].cards = CardHelper.sortCards(game.players[p].cards);
     }
     return game;
@@ -128,10 +130,14 @@ export default class TheGame {
     const cardsPerPlayer: number = CardHelper.cardsPerPlayer(
       game.players.length
     );
-    if (game.players[0].cards.length <= cardsPerPlayer - minimumPlayedCards) {
+    console.log( "LAST MOVE COUNT", game.players[0].lastMoveCardsCount," | Minimum ", minimumPlayedCards)
+    if (game.players[0].cards.length <= game.players[0].lastMoveCardsCount - minimumPlayedCards) {
       return true;
     }
     return false;
+  }
+  static letOtherPlayerPlay(game: Game, player:Player, playerIndex:number){
+
   }
   static cardsPlayerWannaPlay(
     player: Player,

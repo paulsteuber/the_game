@@ -19,11 +19,18 @@ export function RefillStack() {
     if (isAllowed) {
       game.status.allowUserToPlay = false;
 
+      
+
       //Check if Player have won the game
       const winStatus = TheGame.checkPlayersAreWinner(game);
       if (winStatus) console.log("Ihr habt gewonnen!");
       //Draw new cards
       if (game.refillStack.length) setGameStore(TheGame.drawNewCards(0, game));
+      //set lastMoveCardCount of every Player
+      game.players = game.players.map((pl) => {
+        pl.lastMoveCardsCount = pl.cards.length;
+        return pl;
+      });
 
       //let the other player play!
       const otherPlayers = game.players.filter(

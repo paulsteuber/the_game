@@ -9,6 +9,7 @@ export type WannaPlay = {
 };
 export type Player = {
   name: string,
+  lastMoveCardsCount: number,
   cards: PlayerCard[];
 };
 export type Stack = {
