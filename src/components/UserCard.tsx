@@ -33,7 +33,6 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
     }
   };
   const dragStarted = (e, card: PlayerCard) => {
-    console.log("DRAG STARTED", card.value);
     e.dataTransfer.setData("card", card.value);
   };
   const transition = useTransition(true, {

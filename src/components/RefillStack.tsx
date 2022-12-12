@@ -52,7 +52,7 @@ export function RefillStack() {
                         (card) => card.value !== way.hand
                       );
                       game.stacks[way.stack_id].cards.push(way.hand);
-                      setGameStore(game);
+                      //setGameStore(game);
                       game = {...gameStore};
                       console.log(
                         `Player ${playerIndex + 1} wanna play Card ${
@@ -62,7 +62,7 @@ export function RefillStack() {
                     }
                 });
                 setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
-                game = {...gameStore};
+                //game = {...gameStore};
               } else {
                 game.status.gameOver = true;
                 setGameStore(game)
@@ -70,7 +70,7 @@ export function RefillStack() {
                 alert("GAME OVER");
               }
             }
-          },5000 * playerIndex);
+          },500 * (1+playerIndex));
           
         
       }

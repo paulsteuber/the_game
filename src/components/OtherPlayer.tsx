@@ -1,28 +1,12 @@
+import { animated,  useTransition } from "react-spring";
 import { Player } from "../types";
 
 export function OtherPlayer(player: Player) {
-  const printCards = player.cards.map((card) => {
-    const statusClass = Object.values(card.stackStatus).filter(
-      (status) => status === 10
-    ).length
-      ? "ten-bagger"
-      : "";
-    const tenBaggerStack = Object.entries(card.stackStatus).filter(
-      (status) => status[1] === 10
-    );
-    const tenBaggerStackOutput = tenBaggerStack.length
-      ? tenBaggerStack[0][0]
-      : card.value;
-    return (
-      <div
-        className={
-          statusClass +
-          " other-player-card p-2 d-flex align-items-center justify-content-center fw-bolder shadow"
-        }
-      >
-        {tenBaggerStackOutput}
-      </div>
-    );
+
+  const transition = useTransition(player.cards, {
+    from: { opacity: 0, y: 10 },
+    enter: { opacity: 1, y: 0 },
+    leave: {opacity: 0, y: 10 },
   });
   return (
   <div className="player">
@@ -40,7 +24,31 @@ export function OtherPlayer(player: Player) {
       <p className="h5 fw-bolder">{player.name}</p>
       <span>{player.lastMoveCardsCount}</span>
     </div>
-      <div className="other-player-cards d-flex">{printCards}</div>
+      <div className="other-player-cards d-flex">{
+      transition((style, card) => {
+          const statusClass = Object.values(card.stackStatus).filter(
+            (status) => status === 10
+          ).length
+            ? "ten-bagger"
+            : "";
+          const tenBaggerStack = Object.entries(card.stackStatus).filter(
+            (status) => status[1] === 10
+          );
+          const tenBaggerStackOutput = tenBaggerStack.length
+            ? tenBaggerStack[0][0]
+            : card.value;
+
+          return(
+          <animated.div style={style} className={
+            statusClass +
+            " other-player-card p-2 d-flex align-items-center justify-content-center fw-bolder shadow"
+          }>
+          {tenBaggerStackOutput}
+          </animated.div>)
+          }
+          )
+        }
+      </div>
     </div>
   );
 }
