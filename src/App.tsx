@@ -9,6 +9,7 @@ import { IntroOverlay } from "./components/IntroOverlay";
 import { Table } from "./components/Table";
 import { OtherPlayers } from "./components/OtherPlayers";
 import { GameStartOverlay } from "./components/GameStartOverlay";
+import { GameOverOverlay } from "./components/GameOverOverlay";
 
 function App() {
   /**STORE */
@@ -26,6 +27,7 @@ function App() {
       <div className="App" id="app">
         <IntroOverlay />
         <GameStartOverlay />
+        <GameOverOverlay/>
         <Header />
         {gameStore.players.length && (
           <>

@@ -77,6 +77,17 @@ export function RefillStack() {
       otherPlayers.forEach((player: Player, playerIndex: number) => {
         letOtherPlayerPlay(player, playerIndex)
       });
+      //if user has cards, but can't play any cards
+      setTimeout(()=>{
+        const cardsPlayerCanPlay = game.players[0].cards.filter(c => c.stackStatus.a || c.stackStatus.b || c.stackStatus.c || c.stackStatus.d );
+        if(!cardsPlayerCanPlay.length){
+          game.status.gameOver = true;
+          alert("GAME OVER XX")
+          setGameStore(game)
+          game = {...gameStore};
+        }
+      }, 500 * (1+game.players.length))
+     
       //if user has no cards anymore let the other player play
       if(!game.status.gameOver && game.players[0].cards.length === 0){
         alert("Other Players playing alone");
