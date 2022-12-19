@@ -27,6 +27,19 @@ html, body
   background: $dark
   color: $bright
 #app
+  .side
+    max-width: 320px
+  .mini-card
+    height: 2rem
+    width: 1.8rem
+    background: rgb(251,74,151)
+    background: radial-gradient(circle, rgba(251,74,151,1) 0%, rgba(148,187,233,1) 100%)
+    border-radius: 0.2rem
+    transition: 0.5s all ease-in-out
+    &.ten-bagger
+      transform: scale(1.1)
+      background: var(--bs-primary)
+      text-transform: uppercase
   .other-players
     gap: 2rem
     svg

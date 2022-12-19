@@ -20,6 +20,7 @@ export default class TheGame {
         { id: 3, up: false, cards: [100] },
       ],
       refillStack: CardHelper.mix([...Array(98).keys()].map((i) => i + 2)),
+      history: []
     };
   }
   static initPlayers(playerCount: number): Player[] {
@@ -65,6 +66,14 @@ export default class TheGame {
       return game;
 
 
+  }
+  static addHistoryEntry(game: Game, playerId: number, playedCard: number, stack: Stack):Game{
+    game.history.push({
+      player: playerId,
+      playedCard: playedCard,
+      stack: JSON.parse(JSON.stringify(stack))
+    });
+    return game;
   }
   static givePlayersCards(game: Game): Game {
     const countCards: number = CardHelper.cardsPerPlayer(game.players.length);

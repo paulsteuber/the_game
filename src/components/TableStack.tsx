@@ -34,6 +34,7 @@ export function TableStack(stack: Stack) {
     if (cardIsAllowed) {
       // add card to stack
       const game = { ...gameStore };
+      setGameStore(TheGame.addHistoryEntry(game, 0, card, stack))
       game.stacks[stack.id].cards.push(card);
       // and remove card from user
       game.players[0].cards = game.players[0].cards.filter(

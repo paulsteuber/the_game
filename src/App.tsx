@@ -10,6 +10,7 @@ import { Table } from "./components/Table";
 import { OtherPlayers } from "./components/OtherPlayers";
 import { GameStartOverlay } from "./components/GameStartOverlay";
 import { GameOverOverlay } from "./components/GameOverOverlay";
+import { GameHistory } from "./components/GameHistory";
 
 function App() {
   /**STORE */
@@ -29,30 +30,37 @@ function App() {
         <GameStartOverlay />
         <GameOverOverlay/>
         <Header />
-        {gameStore.players.length && (
-          <>
-            <OtherPlayers/>
-            <Table />
-            <User />
-          </>
-        )}
-        <aside className="state">
-          initialized : {gameStore.initialized ? "true" : "false"}
-          gameStatus : {JSON.stringify(gameStore.status)}
-          
-          <br></br>
-          refillStack: {JSON.stringify(gameStore.refillStack)}
-          <br></br>
-          stacks A {JSON.stringify(gameStore.stacks[0].cards)}
-          <br></br>
-          stacks B {JSON.stringify(gameStore.stacks[1].cards)}
-          <br></br>
-          stacks C {JSON.stringify(gameStore.stacks[2].cards)}
-          <br></br>
-          stacks D {JSON.stringify(gameStore.stacks[3].cards)}
-          <br></br>
-          played Cards {(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4)}
-        </aside>
+        <div className="d-flex">
+          {gameStore.players.length && (
+            <div className="main-game d-flex flex-column">
+              <OtherPlayers/>
+              <Table />
+              <User />
+            </div>
+            
+          )}
+          <div className="side d-flex flex-column">
+            <aside className="state">
+              initialized : {gameStore.initialized ? "true" : "false"}
+              <br></br>
+              gameStatus : {JSON.stringify(gameStore.status)}
+              
+              <br></br>
+              refillStack: {JSON.stringify(gameStore.refillStack)}
+              <br></br>
+              stacks A {JSON.stringify(gameStore.stacks[0].cards)}
+              <br></br>
+              stacks B {JSON.stringify(gameStore.stacks[1].cards)}
+              <br></br>
+              stacks C {JSON.stringify(gameStore.stacks[2].cards)}
+              <br></br>
+              stacks D {JSON.stringify(gameStore.stacks[3].cards)}
+              <br></br>
+              played Cards {(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4)}
+            </aside>
+            <GameHistory/>
+          </div>
+        </div>
       </div>
     </GameContext.Provider>
   );

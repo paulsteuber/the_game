@@ -41,7 +41,7 @@ export function OtherPlayer(player: Player) {
           return(
           <animated.div style={style} className={
             statusClass +
-            " other-player-card p-2 d-flex align-items-center justify-content-center fw-bolder shadow"
+            " other-player-card mini-card p-2 d-flex align-items-center justify-content-center fw-bolder shadow"
           }>
           {tenBaggerStackOutput}
           </animated.div>)

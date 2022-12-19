@@ -28,8 +28,14 @@ export type Game = {
   players: Player[];
   stacks: [Stack, Stack, Stack, Stack];
   refillStack: number[];
+  history:HistoryEntry[];
 };
 export type Possibility = {
   weight: number;
   way: [{ hand: number; dist: number; stack_id: number }];
 };
+export type HistoryEntry = {
+  player: number,
+  playedCard: number,
+  stack: Stack
+}
