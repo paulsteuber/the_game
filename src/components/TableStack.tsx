@@ -31,7 +31,7 @@ export function TableStack(stack: Stack) {
     setOnDragOverStatus(componentClasses);
     const cardIsAllowed = TheGame.isCardAllowed(card, stack);
     console.log("KARTE ", card, "IST ERLAUBT", stack.id);
-    if (cardIsAllowed) {
+    if (cardIsAllowed && gameStore.status.allowUserToPlay) {
       // add card to stack
       const game = { ...gameStore };
       setGameStore(TheGame.addHistoryEntry(game, 0, card, stack))

@@ -12,11 +12,14 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
 
   useEffect(() => {}, []);
   const addCardToStack = (stackId: number) => {
-    const game = { ...gameStore };
+    let game = { ...gameStore };
     const selectedStack = game.stacks[stackId];
     /** check if user is allowed to add this number */
     const isAllowed = TheGame.isCardAllowed(card.value, selectedStack);
     if (isAllowed) {
+      setGameStore(TheGame.addHistoryEntry(game, 0, card.value, game.stacks[stackId]))
+      setGameStore(TheGame.removeHistoryEntries(game))
+      game = {...gameStore};
       selectedStack.cards.push(card.value);
       //remove card from players hand
       const newUserCards = game.players[0].cards.filter(

@@ -14,11 +14,12 @@ export function RefillStack() {
    *  FINISH MOVE
    */
   const finishMove = () => {
-    let game: Game = { ...gameStore };
+    let game: Game = gameStore;
     const isAllowed = TheGame.isAllowedFinishMove(game);
     if (isAllowed) {
       game.status.allowUserToPlay = false;
-
+      setGameStore(game);
+      game = { ...gameStore };
       
 
       //Check if Player have won the game
@@ -38,6 +39,7 @@ export function RefillStack() {
       );
         
       const letOtherPlayerPlay = (player: Player, playerIndex: number) =>{
+        return new Promise((resolve) =>{
           setTimeout(()=>{
             const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
             if (player.cards.length) {
@@ -46,8 +48,7 @@ export function RefillStack() {
               if (bestPos) {
                 bestPos.way.forEach((way) => {
                     if (TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])) {
-                      
-                      
+                      setGameStore(TheGame.addHistoryEntry(game, playerIndex+1, way.hand, game.stacks[way.stack_id]))
                       game.players[playerIndex + 1].cards = player.cards.filter(
                         (card) => card.value !== way.hand
                       );
@@ -67,39 +68,55 @@ export function RefillStack() {
                 game.status.gameOver = true;
                 setGameStore(game)
                 //game = {...gameStore};
-                console.log("GAME OVER"+game.status.gameOver);
               }
             }
+            resolve(true);
           },500 * (1+playerIndex));
+        });
+          
           
         
       }
-      otherPlayers.forEach((player: Player, playerIndex: number) => {
-        letOtherPlayerPlay(player, playerIndex)
-      });
-      //if user has cards, but can't play any cards
-      const cardsPlayerCanPlay = game.players[0].cards.filter(c => c.stackStatus.a || c.stackStatus.b || c.stackStatus.c || c.stackStatus.d );
-      console.log("CARDS PLAYER CAN PLAYER", cardsPlayerCanPlay);
-      if(!cardsPlayerCanPlay.length){
-        game.status.gameOver = true;
-        console.log("GAME OVER XX")
-        setGameStore(game)
-        //game = {...gameStore};
-      }
-     
-      //if user has no cards anymore let the other player play
-      if(!game.status.gameOver && game.players[0].cards.length === 0){
-        alert("Other Players playing alone");
-        while(!game.status.gameOver && TheGame.otherPlayersHaveCards(otherPlayers)){
-          otherPlayers.forEach((player: Player, playerIndex: number) => {
-            letOtherPlayerPlay(player, playerIndex)
-          });
+      async function otherPlayerPlays(){
+        for await (const player of otherPlayers) {
+          await letOtherPlayerPlay(player, otherPlayers.indexOf(player) );
         }
+        
+        /**
+         * 
+         * AFTER ALL PLAYERS PLAYED
+         */
+        const cardsPlayerCanPlay = game.players[0].cards.filter(c => c.stackStatus.a || c.stackStatus.b || c.stackStatus.c || c.stackStatus.d );
+        console.log("CARDS PLAYER CAN PLAYER", cardsPlayerCanPlay);
+        if(!cardsPlayerCanPlay.length){
+          game.status.gameOver = true;
+          console.log("GAME OVER XX")
+          setGameStore(game)
+          game = JSON.parse(JSON.stringify(gameStore));
+        }
+        //if user has no cards anymore let the other player play
+        if(!game.status.gameOver && game.players[0].cards.length === 0){
+          alert("Other Players playing alone");
+          while(!game.status.gameOver && TheGame.otherPlayersHaveCards(otherPlayers)){
+            otherPlayers.forEach((player: Player, playerIndex: number) => {
+              letOtherPlayerPlay(player, playerIndex)
+            });
+          }
+        }
+        console.log("ALLOW", game.status.allowUserToPlay)
+        game.status.allowUserToPlay = true;
+        console.log("ALLOW", game.status.allowUserToPlay)
+        setGameStore(game);
+
+
       }
+      otherPlayerPlays();
+      //if user has cards, but can't play any cards
+      
+     
+      
 
-
-      game.status.allowUserToPlay = true;
-      setGameStore(game);
+      
       return;
     }
 
@@ -107,7 +124,7 @@ export function RefillStack() {
   };
   return (
     <>
-      <div
+     <div
         className={
           gameStore.status.allowUserToPlay
             ? refillStackClassNames + " is-allowed"
@@ -117,7 +134,15 @@ export function RefillStack() {
           finishMove();
         }}
       >
+        {gameStore.status.allowUserToPlay ? (
         <p className="fw-bolder h4 text-center">finish move</p>
+        ) : (
+          <div className="loading">
+          {[...Array(3)].map(() =>(<div className="spinner-grow spinner-grow-sm mx-1" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>))}
+          </div>
+        )}
       </div>
     </>
   );

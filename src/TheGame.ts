@@ -67,13 +67,27 @@ export default class TheGame {
 
 
   }
-  static addHistoryEntry(game: Game, playerId: number, playedCard: number, stack: Stack):Game{
-    game.history.push({
+  static getStackNameById(id: number): string{
+    return "ABCD"[id];
+  }
+  static async addHistoryEntry(game: Game, playerId: number, playedCard: number, stack: Stack):Game{
+    return new Promise((resolve) => {
+      game.history.push({
       player: playerId,
       playedCard: playedCard,
       stack: JSON.parse(JSON.stringify(stack))
     });
-    return game;
+    setTimeout(()=>{
+      game.history.pop();
+      resolve( game );
+    }, 2000)
+    
+    })
+  }
+  static removeHistoryEntries(game: Game): Game{
+    let newGame = {...game}
+    newGame.history = [];
+    return newGame;
   }
   static givePlayersCards(game: Game): Game {
     const countCards: number = CardHelper.cardsPerPlayer(game.players.length);
