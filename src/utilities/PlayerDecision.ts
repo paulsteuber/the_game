@@ -1,4 +1,5 @@
 import { Game, Player, PlayerCard, Possibility, Stack } from "../types";
+import { PossibilityCalculation } from "./PossibilityCalculation";
 
 export class PlayerDecision {
   player: Player;
@@ -22,6 +23,11 @@ export class PlayerDecision {
       (pos: Possibility) => pos.way.length >= minimumCardsToPlay
     );
     if (!possMinimum.length) return false;
+
+    const bestPossibilityByCalculator = new PossibilityCalculation(
+      this.game,
+      possMinimum
+    ).getBestResult();
     const bestPossibility = possMinimum.reduce(function (prev, curr) {
       return prev.weight < curr.weight ? prev : curr;
     });
@@ -32,7 +38,6 @@ export class PlayerDecision {
     const bestPossibilities = possMinimum.filter(
       (pos) => pos.weight === bestPossibility.weight
     );
-    console.log("MULTIPLE POSSIBILLITIES", bestPossibilities);
     //find possibility with lowest stacking diversity
     const lowestStackingDiv = bestPossibilities.map((pos) => {
       let usedStacks: number[] = [];
@@ -50,9 +55,15 @@ export class PlayerDecision {
       alert(
         `best: ${bestPossibility.stackWeight}, best-HC: ${bestPossibilityHC.stackWeight}`
       );
-    console.log("BEST", bestPossibility, bestPossibilityHC);
+    console.log(
+      "°°°°°°°° BEST",
+      bestPossibility,
+      bestPossibilityHC,
+      "CALC",
+      bestPossibilityByCalculator
+    );
 
-    return bestPossibilityHC;
+    return bestPossibilityByCalculator;
   }
 
   private flattenAllWays(waysArray: any) {
