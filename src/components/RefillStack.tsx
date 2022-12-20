@@ -53,7 +53,7 @@ export function RefillStack() {
                         (card) => card.value !== way.hand
                       );
                       game.stacks[way.stack_id].cards.push(way.hand);
-                      //setGameStore(game);
+                      setGameStore(game);
                       game = {...gameStore};
                       console.log(
                         `Player ${playerIndex + 1} wanna play Card ${
@@ -62,12 +62,14 @@ export function RefillStack() {
                       );
                     }
                 });
+                console.log("BEFORE DRAWNEWCARD", game);
                 setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
-                //game = {...gameStore};
+                game = {...gameStore};
               } else {
+                alert("GAME OVER");
                 game.status.gameOver = true;
                 setGameStore(game)
-                //game = {...gameStore};
+                game = {...gameStore};
               }
             }
             resolve(true);
@@ -103,9 +105,7 @@ export function RefillStack() {
             });
           }
         }
-        console.log("ALLOW", game.status.allowUserToPlay)
         game.status.allowUserToPlay = true;
-        console.log("ALLOW", game.status.allowUserToPlay)
         setGameStore(game);
 
 
@@ -135,7 +135,10 @@ export function RefillStack() {
         }}
       >
         {gameStore.status.allowUserToPlay ? (
-        <p className="fw-bolder h4 text-center">finish move</p>
+        <>
+          <p className="fw-bolder h4 text-center">finish move</p>
+          <span>{gameStore.refillStack.length}</span>
+        </>
         ) : (
           <div className="loading">
           {[...Array(3)].map(() =>(<div className="spinner-grow spinner-grow-sm mx-1" role="status">

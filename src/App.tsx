@@ -31,7 +31,7 @@ function App() {
         <GameOverOverlay/>
         <Header />
         <div className="d-flex">
-          {gameStore.players.length && (
+          {gameStore.players && gameStore.players.length && (
             <div className="main-game d-flex flex-column">
               <OtherPlayers/>
               <Table />
@@ -48,15 +48,15 @@ function App() {
               <br></br>
               refillStack: {JSON.stringify(gameStore.refillStack)}
               <br></br>
-              stacks A {JSON.stringify(gameStore.stacks[0].cards)}
+              stacks A {gameStore.stacks? JSON.stringify(gameStore.stacks[0].cards): ""}
               <br></br>
-              stacks B {JSON.stringify(gameStore.stacks[1].cards)}
+              stacks B {gameStore.stacks?JSON.stringify(gameStore.stacks[1].cards): ""}
               <br></br>
-              stacks C {JSON.stringify(gameStore.stacks[2].cards)}
+              stacks C {gameStore.stacks?JSON.stringify(gameStore.stacks[2].cards): ""}
               <br></br>
-              stacks D {JSON.stringify(gameStore.stacks[3].cards)}
+              stacks D {gameStore.stacks?JSON.stringify(gameStore.stacks[3].cards): ""}
               <br></br>
-              played Cards {(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4)}
+              played Cards {gameStore.stacks?(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4): ""}
             </aside>
             <GameHistory/>
           </div>

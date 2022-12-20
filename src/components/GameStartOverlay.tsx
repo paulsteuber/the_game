@@ -6,7 +6,6 @@ import { animated, easings, useSpring } from "react-spring";
 
 export function GameStartOverlay(){
   const { gameStore, setGameStore } = useContext<any>(GameContext);
-  const [overlayHide, setOverlayHide] = useState(false);
   const disablePlayerButtons: string = gameStore.players.length
   ? "disabled"
   : "";

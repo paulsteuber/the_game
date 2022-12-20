@@ -9,9 +9,9 @@ export function Table(){
   const stacks = gameStore.stacks;
   return (
     <div className="d-flex justify-content-center align-items-center">
-          {stacks.map((stack: Stack) => {
+          {stacks? stacks.map((stack: Stack) => {
             return <TableStack  key={stack.id} {...stack} />
-          })}  
+          }):""}  
 
           <RefillStack />
     </div>

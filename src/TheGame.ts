@@ -41,11 +41,14 @@ export default class TheGame {
     return players;
   }
   static drawNewCards(playerID: number, game: Game):Game{
+      game === undefined ? alert("UNDEFINED GAME"): "";
       const cardsPerPlayer = CardHelper.cardsPerPlayer(game.players.length);
       const player = game.players[playerID];
 
       const usersCardsCount = player.cards.length;
-      cardsPerPlayer - usersCardsCount < 2 ? alert("ERROR "+playerID+" has more cards than allowed"):"";
+      if(game.refillStack.length === 0){
+        cardsPerPlayer - usersCardsCount < 2 ? alert("ERROR "+playerID+" has more cards than allowed"):"";
+      }
       for (let i = 0; i < cardsPerPlayer - usersCardsCount; i++) {
         const nextRefillCard =game.refillStack.shift();
         if (nextRefillCard) {
@@ -57,7 +60,7 @@ export default class TheGame {
         }
       }
       player.cards = CardHelper.sortCards(player.cards);
-
+      console.log("LAST GAME STACK", game.stacks)
       //refresh card status
       game.players = TheGame.refreshPlayerCardsStatus(
         game.players,
