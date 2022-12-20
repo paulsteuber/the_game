@@ -1,4 +1,4 @@
-import { useContext, useState} from "react";
+import { useContext, useState } from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import "../assets/RefillStack.sass";
@@ -9,8 +9,7 @@ import { PlayerDecision } from "../utilities/PlayerDecision";
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
   const [test, setTest] = useState(1);
- 
-  
+
   /**
    *  FINISH MOVE
    */
@@ -21,7 +20,6 @@ export function RefillStack() {
       game.status.allowUserToPlay = false;
       setGameStore(game);
       game = { ...gameStore };
-      
 
       //Check if Player have won the game
       const winStatus = TheGame.checkPlayersAreWinner(game);
@@ -38,86 +36,98 @@ export function RefillStack() {
       const otherPlayers = game.players.filter(
         (p: Player, playerID: number) => playerID !== 0
       );
-        
-      const letOtherPlayerPlay = (player: Player, playerIndex: number) =>{
-        return new Promise((resolve) =>{
-          setTimeout(()=>{
+
+      const letOtherPlayerPlay = (player: Player, playerIndex: number) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
             const minimumCardsToPlay: number = game.refillStack.length ? 2 : 1;
             if (player.cards.length) {
               const plDecision = new PlayerDecision(player, game);
               const bestPos = plDecision.getBestPossibility(minimumCardsToPlay);
               if (bestPos) {
                 bestPos.way.forEach((way) => {
-                    if (TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])) {
-                      setGameStore(TheGame.addHistoryEntry(game, playerIndex+1, way.hand, game.stacks[way.stack_id]))
-                      game.players[playerIndex + 1].cards = player.cards.filter(
-                        (card) => card.value !== way.hand
-                      );
-                      game.stacks[way.stack_id].cards.push(way.hand);
-                      setGameStore(game);
-                      game = {...gameStore};
-                      console.log(
-                        `Player ${playerIndex + 1} wanna play Card ${
-                          way.hand
-                        } to Stack ${way.stack_id}`
-                      );
-                    }
+                  if (
+                    TheGame.isCardAllowed(way.hand, game.stacks[way.stack_id])
+                  ) {
+                    setGameStore(
+                      TheGame.addHistoryEntry(
+                        game,
+                        playerIndex + 1,
+                        way.hand,
+                        game.stacks[way.stack_id]
+                      )
+                    );
+                    game.players[playerIndex + 1].cards = player.cards.filter(
+                      (card) => card.value !== way.hand
+                    );
+                    game.stacks[way.stack_id].cards.push(way.hand);
+                    setGameStore(game);
+                    game = { ...gameStore };
+                    console.log(
+                      `Player ${playerIndex + 1} wanna play Card ${
+                        way.hand
+                      } to Stack ${way.stack_id}`
+                    );
+                  }
                 });
                 setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
-                game = {...gameStore};
+                game = { ...gameStore };
               } else {
                 game.status.gameOver = true;
-                setGameStore(game)
-                game = {...gameStore};
+                setGameStore(game);
+                game = { ...gameStore };
                 resolve(true);
               }
             }
             resolve(false);
-          },500 * (1+playerIndex));
+          }, 500 * (1 + playerIndex));
         });
-          
-          
-        
-      }
-      async function otherPlayerPlays(){
+      };
+      async function otherPlayerPlays() {
         for await (const player of otherPlayers) {
-          const gameOverStatus = await letOtherPlayerPlay(player, otherPlayers.indexOf(player) );
+          const gameOverStatus = await letOtherPlayerPlay(
+            player,
+            otherPlayers.indexOf(player)
+          );
           if (gameOverStatus) break;
         }
-        
+
         /**
-         * 
+         *
          * AFTER ALL PLAYERS PLAYED
          */
-        const cardsPlayerCanPlay = game.players[0].cards.filter(c => c.stackStatus.a || c.stackStatus.b || c.stackStatus.c || c.stackStatus.d );
+        const cardsPlayerCanPlay = game.players[0].cards.filter(
+          (c) =>
+            c.stackStatus.a ||
+            c.stackStatus.b ||
+            c.stackStatus.c ||
+            c.stackStatus.d
+        );
         console.log("CARDS PLAYER CAN PLAYER", cardsPlayerCanPlay);
-        if(!cardsPlayerCanPlay.length){
+        if (game.players[0].cards.length && !cardsPlayerCanPlay.length) {
           game.status.gameOver = true;
-          console.log("GAME OVER XX")
-          setGameStore(game)
+          console.log("GAME OVER XX");
+          setGameStore(game);
           game = JSON.parse(JSON.stringify(gameStore));
         }
         //if user has no cards anymore let the other player play
-        if(!game.status.gameOver && game.players[0].cards.length === 0){
+        if (!game.status.gameOver && game.players[0].cards.length === 0) {
           alert("Other Players playing alone");
-          while(!game.status.gameOver && TheGame.otherPlayersHaveCards(otherPlayers)){
+          while (
+            !game.status.gameOver &&
+            TheGame.otherPlayersHaveCards(otherPlayers)
+          ) {
             otherPlayers.forEach((player: Player, playerIndex: number) => {
-              letOtherPlayerPlay(player, playerIndex)
+              letOtherPlayerPlay(player, playerIndex);
             });
           }
         }
         game.status.allowUserToPlay = true;
         setGameStore(game);
-
-
       }
       otherPlayerPlays();
       //if user has cards, but can't play any cards
-      
-     
-      
 
-      
       return;
     }
 
@@ -125,38 +135,51 @@ export function RefillStack() {
   };
 
   const howManyCardsToPlay = () => {
-    if(gameStore.refillStack.length){
-      const diff = gameStore.players[0].cards.length - CardHelper.cardsPerPlayer(gameStore.players.length);
+    if (gameStore.refillStack.length) {
+      const diff =
+        gameStore.players[0].cards.length -
+        CardHelper.cardsPerPlayer(gameStore.players.length);
       return 2 + diff;
     }
-    const diff =  gameStore.players[0].lastMoveCardsCount - gameStore.players[0].cards.length;
-    return diff === 0 ? 1: 0
-  }  
+    const diff =
+      gameStore.players[0].lastMoveCardsCount -
+      gameStore.players[0].cards.length;
+    return diff === 0 ? 1 : 0;
+  };
   return (
     <>
-     <div
+      <div
         className={
           (gameStore.status.allowUserToPlay
             ? refillStackClassNames + " is-allowed"
-            : refillStackClassNames)+" "+(
-              howManyCardsToPlay() > 0 ? "not-enough-cards-played": ""
-            )+(gameStore.refillStack.length === 0 ? " empty-refill-stack": "")
+            : refillStackClassNames) +
+          " " +
+          (howManyCardsToPlay() > 0 ? "not-enough-cards-played" : "") +
+          (gameStore.refillStack.length === 0 ? " empty-refill-stack" : "")
         }
         onClick={() => {
           finishMove();
         }}
       >
         {gameStore.status.allowUserToPlay ? (
-        <>
-          {howManyCardsToPlay() > 0 ? <p className="fw-bolder h6 text-center">You must play {howManyCardsToPlay()} card</p>: <p className="fw-bolder h4 text-center">finish move</p>}
-          
-          <span>{gameStore.refillStack.length}</span>
-        </>
+          <>
+            {howManyCardsToPlay() > 0 ? (
+              <p className="fw-bolder h6 text-center">
+                You must play {howManyCardsToPlay()} card
+              </p>
+            ) : (
+              <p className="fw-bolder h4 text-center">finish move</p>
+            )}
+
+            <span>{gameStore.refillStack.length}</span>
+          </>
         ) : (
           <div className="loading">
-          {[...Array(3)].map(() =>(<div className="spinner-grow spinner-grow-sm mx-1" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>))}
+            {[...Array(3)].map(() => (
+              <div className="spinner-grow spinner-grow-sm mx-1" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
