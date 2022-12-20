@@ -62,17 +62,16 @@ export function RefillStack() {
                       );
                     }
                 });
-                console.log("BEFORE DRAWNEWCARD", game);
                 setGameStore(TheGame.drawNewCards(playerIndex + 1, game));
                 game = {...gameStore};
               } else {
-                alert("GAME OVER");
                 game.status.gameOver = true;
                 setGameStore(game)
                 game = {...gameStore};
+                resolve(true);
               }
             }
-            resolve(true);
+            resolve(false);
           },500 * (1+playerIndex));
         });
           
@@ -81,7 +80,8 @@ export function RefillStack() {
       }
       async function otherPlayerPlays(){
         for await (const player of otherPlayers) {
-          await letOtherPlayerPlay(player, otherPlayers.indexOf(player) );
+          const gameOverStatus = await letOtherPlayerPlay(player, otherPlayers.indexOf(player) );
+          if (gameOverStatus) break;
         }
         
         /**
