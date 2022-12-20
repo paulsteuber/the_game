@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState} from "react";
 import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import "../assets/RefillStack.sass";
@@ -9,7 +9,8 @@ import { PlayerDecision } from "../utilities/PlayerDecision";
 export function RefillStack() {
   const { gameStore, setGameStore } = useContext<any>(GameContext);
   const [test, setTest] = useState(1);
-
+ 
+  
   /**
    *  FINISH MOVE
    */
@@ -122,13 +123,24 @@ export function RefillStack() {
 
     console.log("finish is not allowed");
   };
+
+  const howManyCardsToPlay = () => {
+    if(gameStore.refillStack.length){
+      const diff = gameStore.players[0].cards.length - CardHelper.cardsPerPlayer(gameStore.players.length);
+      return 2 + diff;
+    }
+    const diff =  gameStore.players[0].lastMoveCardsCount - gameStore.players[0].cards.length;
+    return diff === 0 ? 1: 0
+  }  
   return (
     <>
      <div
         className={
-          gameStore.status.allowUserToPlay
+          (gameStore.status.allowUserToPlay
             ? refillStackClassNames + " is-allowed"
-            : refillStackClassNames
+            : refillStackClassNames)+" "+(
+              howManyCardsToPlay() > 0 ? "not-enough-cards-played": ""
+            )+(gameStore.refillStack.length === 0 ? " empty-refill-stack": "")
         }
         onClick={() => {
           finishMove();
@@ -136,7 +148,8 @@ export function RefillStack() {
       >
         {gameStore.status.allowUserToPlay ? (
         <>
-          <p className="fw-bolder h4 text-center">finish move</p>
+          {howManyCardsToPlay() > 0 ? <p className="fw-bolder h6 text-center">You must play {howManyCardsToPlay()} card</p>: <p className="fw-bolder h4 text-center">finish move</p>}
+          
           <span>{gameStore.refillStack.length}</span>
         </>
         ) : (

@@ -16,18 +16,10 @@ export function User() {
     ? ""
     : "play-forbidden";
 
-  const howManyCardsToPlay = () => {
-    if(gameStore.refillStack.length){
-      const diff = gameStore.players[0].cards.length - CardHelper.cardsPerPlayer(gameStore.players.length);
-      return 2 + diff;
-    }
-    const diff =  gameStore.players[0].lastMoveCardsCount - gameStore.players[0].cards.length;
-    return diff === 0 ? 1: 0
-  }  
+  
   return (
     <div className="d-flex justify-content-center align-items-center flex-column user">
       Your Cards
-      <div className="how-many-cards-to-play">{howManyCardsToPlay() > 0 ? howManyCardsToPlay(): ""}</div>
       <div className={allowUserToPlayClass + " d-flex justify-content-center"}>
         {userCardsComponents}
       </div>
