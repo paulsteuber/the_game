@@ -55,7 +55,7 @@ export class PlayerDecision {
       alert(
         `best: ${bestPossibility.stackWeight}, best-HC: ${bestPossibilityHC.stackWeight}`
       );
-    console.log(
+      if(bestPossibility.weight !== bestPossibilityByCalculator.weight)console.log(
       "°°°°°°°° BEST",
       bestPossibility,
       bestPossibilityHC,

@@ -112,12 +112,14 @@ export function RefillStack() {
         }
         //if user has no cards anymore let the other player play
         if (!game.status.gameOver && game.players[0].cards.length === 0) {
-          alert("Other Players playing alone");
+          alert("Other Players playing alone | otherPlayerHasCards: "+TheGame.otherPlayersHaveCards(otherPlayers) );
           while (
             !game.status.gameOver &&
             TheGame.otherPlayersHaveCards(otherPlayers)
           ) {
+            console.log("OTHER PLAYER PLAYYYS");
             otherPlayers.forEach((player: Player, playerIndex: number) => {
+              console.log(player.name, "has played");
               letOtherPlayerPlay(player, playerIndex);
             });
           }

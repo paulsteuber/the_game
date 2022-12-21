@@ -41,7 +41,7 @@ export class PossibilityCalculation {
         : (98 - stackLastCard) / 98;
 
       newCalculatedWeight =
-        newCalculatedWeight + (w.dist + Math.pow(stackProgress, 1.5));
+        newCalculatedWeight + (w.dist * Math.pow(1+stackProgress, 2));
       stack.cards.push(w.hand);
     });
     newPos.stackWeight = newCalculatedWeight;

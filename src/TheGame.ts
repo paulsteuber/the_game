@@ -172,10 +172,11 @@ export default class TheGame {
     return wannaPlay;
   }
   static otherPlayersHaveCards(players: Player[]):boolean{
+    let result:boolean = false;
     players.forEach(player => {
-      if(player.cards.length) return true
+      if(player.cards.length) result = true;
     });
-    return false
+    return result;
   }
   static checkPlayersAreWinner(game: Game):boolean{
     const playerWithCards = game.players.filter(p => p.cards.length > 0);
