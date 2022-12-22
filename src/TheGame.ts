@@ -9,6 +9,7 @@ export default class TheGame {
       status: {
         allowUserToPlay: true,
         gameOver: false,
+        gameWin: false,
         playerCountOverlayHide: false
       },
       initialized: false,
@@ -67,6 +68,15 @@ export default class TheGame {
       return game;
 
 
+  }
+  static containsTenBagger (sStatus: {
+    a: boolean | 10;
+    b: boolean | 10;
+    c: boolean | 10;
+    d: boolean | 10;
+  }){
+    if(sStatus.a === 10 || sStatus.b === 10 || sStatus.c === 10 ||sStatus.d === 10 ) return true;
+    return false;
   }
   static getStackNameById(id: number): string{
     return "ABCD"[id];

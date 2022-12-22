@@ -103,32 +103,35 @@ export function RefillStack() {
             c.stackStatus.c ||
             c.stackStatus.d
         );
-        console.log("CARDS PLAYER CAN PLAYER", cardsPlayerCanPlay);
         if (game.players[0].cards.length && !cardsPlayerCanPlay.length) {
           game.status.gameOver = true;
           console.log("GAME OVER XX");
           setGameStore(game);
-          game = JSON.parse(JSON.stringify(gameStore));
+          game = { ...gameStore };
         }
+        // players won the game
+      if(!TheGame.otherPlayersHaveCards(otherPlayers) && game.players[0].cards.length === 0) {
+        game.status.gameWin = true;
+        alert("GEWONNEN");
+      } 
+      
         //if user has no cards anymore let the other player play
-        if (!game.status.gameOver && game.players[0].cards.length === 0) {
-          alert("Other Players playing alone | otherPlayerHasCards: "+TheGame.otherPlayersHaveCards(otherPlayers) );
-          while (
-            !game.status.gameOver &&
-            TheGame.otherPlayersHaveCards(otherPlayers)
-          ) {
-            console.log("OTHER PLAYER PLAYYYS");
-            otherPlayers.forEach((player: Player, playerIndex: number) => {
-              console.log(player.name, "has played");
-              letOtherPlayerPlay(player, playerIndex);
-            });
-          }
+      if (!game.status.gameOver && !game.status.gameWin && game.players[0].cards.length === 0) {
+        if (
+          TheGame.otherPlayersHaveCards(otherPlayers)
+        ) {
+          console.log("OTHER PLAYER PLAYYYS");
+          otherPlayerPlays();
         }
-        game.status.allowUserToPlay = true;
-        setGameStore(game);
+      }
+      
+      game.status.allowUserToPlay = true;
+      setGameStore(game);
+
       }
       otherPlayerPlays();
-      //if user has cards, but can't play any cards
+
+      
 
       return;
     }

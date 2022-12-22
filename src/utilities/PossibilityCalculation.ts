@@ -1,11 +1,13 @@
-import { Game, Possibility } from "../types";
+import { Game, Player, Possibility, Stack } from "../types";
 
 export class PossibilityCalculation {
+  player: Player;
   game: Game;
   possibilities: Possibility[];
   endResult: Possibility;
   gameProgress: number;
-  constructor(game: Game, possibilities: Possibility[]) {
+  constructor(player: Player, game: Game, possibilities: Possibility[]) {
+    this.player = player;
     this.game = game;
     this.possibilities = possibilities;
     this.gameProgress = this.calculateGameProgress();
@@ -21,13 +23,39 @@ export class PossibilityCalculation {
     const minimumWeight = sorted[0].weight;
     const filtered20 = sorted.filter((pos) => pos.weight <= minimumWeight + 20);
     //console.log("FILTERED", filtered20);
-    const algoWeight = filtered20.map((pos) => this.calculateGameWeight(pos));
+    const algoWeight = filtered20.map((pos) => this.calculateGameWeight(pos, this.getOthersTenBagger()));
     const result = algoWeight.reduce(function (prev, curr) {
       return prev.stackWeight < curr.stackWeight ? prev : curr;
     });
     return result;
   }
-  private calculateGameWeight(pos: Possibility): Possibility {
+  private getOthersTenBagger(){
+    /** other players ten bagger penalty */
+    const othersTenBagger: {player: Player, stackId: number }[] = [];
+    this.game.players.forEach((pl, plID) =>{
+      //ignore own ten baggers
+      if(pl.name === this.player.name) return;
+      if(othersTenBagger.length === 4) return;
+
+      pl.cards.forEach(c => {
+        for (const [key, value] of Object.entries(c.stackStatus)) {
+          const stackId = this.letterToNumber(key);
+          if(value === 10) {
+            othersTenBagger.push({player: pl, stackId: stackId})
+          }
+        }
+      })
+    });
+    return othersTenBagger;
+  }
+  private playerPlayerDistance(otherPlayer: Player){
+    const ownIndex = this.game.players.indexOf(this.player);
+    const otherIndex = this.game.players.indexOf(otherPlayer);
+    const playerLength = this.game.players.length;
+    const dist = otherIndex < ownIndex ? playerLength - ownIndex + otherIndex : otherIndex - ownIndex;
+  }
+
+  private calculateGameWeight(pos: Possibility, otherTenBaggers: {player: Player, stackId: number }[]): Possibility {
     const newPos = { ...pos };
     let newCalculatedWeight = 0; //first take the orginial weight
     const copyStacks = [...this.game.stacks];
@@ -37,9 +65,12 @@ export class PossibilityCalculation {
       const stackLastCard = stack.cards[stack.cards.length - 1];
 
       const stackProgress = stack.up
-        ? stackLastCard / 98
-        : (98 - stackLastCard) / 98;
+        ? stackLastCard+1 / 99
+        : (99 - stackLastCard + 1) / 99;
 
+      
+
+      // CALCULATE WEIGHT
       newCalculatedWeight =
         newCalculatedWeight + (w.dist * Math.pow(1+stackProgress, 2));
       stack.cards.push(w.hand);
@@ -47,7 +78,10 @@ export class PossibilityCalculation {
     newPos.stackWeight = newCalculatedWeight;
     return newPos;
   }
+  private letterToNumber(letter:string):number {
 
+    return letter.toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0);
+  }
   private calculateGameProgress() {
     return (
       (this.game.refillStack.length +

@@ -25,6 +25,7 @@ export class PlayerDecision {
     if (!possMinimum.length) return false;
 
     const bestPossibilityByCalculator = new PossibilityCalculation(
+      this.player,
       this.game,
       possMinimum
     ).getBestResult();
@@ -90,7 +91,6 @@ export class PlayerDecision {
     waysArray.forEach((wayArr: any) => {
       flattenWay(wayArr, null);
     });
-    console.log(allPossibilites);
     return allPossibilites;
   }
 

@@ -25,6 +25,7 @@ export type Stack = {
 export type Status = {
   allowUserToPlay: boolean;
   gameOver: boolean;
+  gameWin: boolean;
   playerCountOverlayHide: boolean;
 };
 export type Game = {
