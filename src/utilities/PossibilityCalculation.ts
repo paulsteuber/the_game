@@ -83,11 +83,11 @@ export class PossibilityCalculation {
     impactedTenBaggers = [...new Set(impactedTenBaggers)]; // remove duplicates
     let tenBaggerPenalty = 0;
     impactedTenBaggers.forEach(tb => {
-      let penalty = 10 - Math.pow(tb.playerDistance+ 1, 2);
+      let penalty = 10 - Math.pow(tb.playerDistance, 2);
       penalty = penalty < 1 ? 1: penalty;
       tenBaggerPenalty+= penalty;
     })
-    console.log("PENALTY",tenBaggerPenalty, this.player)
+    console.log("PENALTY",tenBaggerPenalty, pos, this.player)
     console.log("newCalculatedWeight", newCalculatedWeight, "OLD", newPos)
     newPos.stackWeight = newCalculatedWeight + tenBaggerPenalty;
     return newPos;
