@@ -85,11 +85,14 @@ export function RefillStack() {
       };
       async function otherPlayerPlays() {
         for await (const player of otherPlayers) {
-          const gameOverStatus = await letOtherPlayerPlay(
-            player,
-            otherPlayers.indexOf(player)
-          );
-          if (gameOverStatus) break;
+          if(player.cards.length){
+            const gameOverStatus = await letOtherPlayerPlay(
+              player,
+              otherPlayers.indexOf(player)
+            );
+          }
+          
+          if (game.status.gameOver || game.status.gameWin) break;
         }
 
         /**

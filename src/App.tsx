@@ -40,24 +40,6 @@ function App() {
             
           )}
           <div className="side d-flex flex-column">
-            <aside className="state">
-              initialized : {gameStore.initialized ? "true" : "false"}
-              <br></br>
-              gameStatus : {JSON.stringify(gameStore.status)}
-              
-              <br></br>
-              refillStack: {JSON.stringify(gameStore.refillStack)}
-              <br></br>
-              stacks A {gameStore.stacks? JSON.stringify(gameStore.stacks[0].cards): ""}
-              <br></br>
-              stacks B {gameStore.stacks?JSON.stringify(gameStore.stacks[1].cards): ""}
-              <br></br>
-              stacks C {gameStore.stacks?JSON.stringify(gameStore.stacks[2].cards): ""}
-              <br></br>
-              stacks D {gameStore.stacks?JSON.stringify(gameStore.stacks[3].cards): ""}
-              <br></br>
-              played Cards {gameStore.stacks?(gameStore.stacks[0].cards.length+gameStore.stacks[1].cards.length+gameStore.stacks[2].cards.length+gameStore.stacks[3].cards.length -4): ""}
-            </aside>
             <GameHistory/>
           </div>
         </div>

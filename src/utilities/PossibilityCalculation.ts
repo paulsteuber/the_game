@@ -77,7 +77,7 @@ export class PossibilityCalculation {
         : (99 - stackLastCard + 1) / 99;
       // CALCULATE WEIGHT
       newCalculatedWeight =
-        newCalculatedWeight + (w.dist * Math.pow(1+stackProgress, 1.5));
+        newCalculatedWeight + (w.dist * Math.pow(1+stackProgress, 2));
       stack.cards.push(w.hand);
     });
     impactedTenBaggers = [...new Set(impactedTenBaggers)]; // remove duplicates

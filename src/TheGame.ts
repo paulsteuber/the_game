@@ -89,7 +89,6 @@ export default class TheGame {
       stack: JSON.parse(JSON.stringify(stack))
     });
     setTimeout(()=>{
-      game.history.pop();
       resolve( game );
     }, 2000)
     

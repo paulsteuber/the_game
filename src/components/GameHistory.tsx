@@ -8,7 +8,7 @@ export function GameHistory(){
   const { gameStore, setGameStore } = useContext<any>(GameContext);
   
   const miniCard = (number: number)=>{
-    return (<span className="mini-card">{number}</span>)
+    return (<span className="mini-card p-2">{number}</span>)
   }
   const transition = useTransition(gameStore.history, {
     from: { opacity: 0, y: 10 },
@@ -32,10 +32,17 @@ export function GameHistory(){
 
 
   return(
-    <aside className="game-history-wrapper">
-      <div className="game-history">
-        { historyEntries}
-      </div>
+    <aside className="game-history-wrapper d-flex align-items-center flex-column">
+      {gameStore.history.length ?
+      <>
+        <h3 className="history-title">Turn History</h3>
+        <div className="game-history">
+          { historyEntries}
+        </div>
+      </>
+       : ""
+      }
+      
     </aside>
   )
 }
