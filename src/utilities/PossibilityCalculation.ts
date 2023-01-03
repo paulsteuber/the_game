@@ -79,6 +79,8 @@ export class PossibilityCalculation {
       newCalculatedWeight =
         newCalculatedWeight + (w.dist * Math.pow(1+stackProgress, 2));
       stack.cards.push(w.hand);
+      //REDUCE WEIGHT IF DIST JUST 1
+      newCalculatedWeight = w.dist === 1 ? newCalculatedWeight -1 : newCalculatedWeight;
     });
     impactedTenBaggers = [...new Set(impactedTenBaggers)]; // remove duplicates
     let tenBaggerPenalty = 0;

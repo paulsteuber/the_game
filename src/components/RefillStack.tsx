@@ -17,6 +17,7 @@ export function RefillStack() {
     let game: Game = gameStore;
     const isAllowed = TheGame.isAllowedFinishMove(game);
     if (isAllowed) {
+      game.history = [];
       game.status.allowUserToPlay = false;
       setGameStore(game);
       game = { ...gameStore };
