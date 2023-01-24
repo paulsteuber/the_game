@@ -39,6 +39,8 @@ export class PlayerDecision {
     const bestPossibilities = possMinimum.filter(
       (pos) => pos.weight === bestPossibility.weight
     );
+
+    /**
     //find possibility with lowest stacking diversity
     const lowestStackingDiv = bestPossibilities.map((pos) => {
       let usedStacks: number[] = [];
@@ -63,7 +65,7 @@ export class PlayerDecision {
       "CALC",
       bestPossibilityByCalculator
     );
-
+    */
     return bestPossibilityByCalculator;
   }
 

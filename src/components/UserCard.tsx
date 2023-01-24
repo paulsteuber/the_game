@@ -3,6 +3,7 @@ import { GameContext } from "../GameContext";
 import TheGame from "../TheGame";
 import { PlayerCard, Stack } from "../types";
 import { useTransition, animated } from "react-spring";
+import { Card } from "./Card";
 
 export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
   const card = props.card;
@@ -35,7 +36,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
       setGameStore(game);
     }
   };
-  const dragStarted = (e, card: PlayerCard) => {
+  const dragStarted = (e:any, card: PlayerCard) => {
     e.dataTransfer.setData("card", card.value);
   };
   const transition = useTransition(true, {
@@ -102,9 +103,7 @@ export function UserCard(props:{card:PlayerCard, cardIndex: number}) {
           </button>
         </div>
       </div>
-      <div className="user-card rounded-2 shadow py-4 d-flex justify-content-center align-items-center">
-        <span className="h1 fw-bolder m-0 p-4">{card.value}</span>
-      </div>
+      <Card {...{cardValue:card.value, type: "normal" }}/>
     </div>
     </animated.div>
     

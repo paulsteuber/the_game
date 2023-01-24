@@ -87,7 +87,7 @@ export class PossibilityCalculation {
     impactedTenBaggers.forEach(tb => {
       let penalty = 10 - Math.pow(tb.playerDistance, 2);
       penalty = penalty < 1 ? 1: penalty;
-      tenBaggerPenalty+= penalty;
+       tenBaggerPenalty+= penalty;
     })
     console.log("PENALTY",tenBaggerPenalty, pos, this.player)
     console.log("newCalculatedWeight", newCalculatedWeight, "OLD", newPos)
